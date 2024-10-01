@@ -87,8 +87,20 @@ const styles = StyleSheet.create({
     color: "#80FF00",
     fontWeight: "bold",
   },
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#000F0C",
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+    color: "#80FF00",
+    fontWeight: "bold",
+  },
   card: {
     padding: 20,
+    backgroundColor: "#000F0C",
     backgroundColor: "#000F0C",
     marginBottom: 20,
     borderRadius: 10,
