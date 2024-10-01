@@ -41,7 +41,7 @@ const UserProfileScreen = ({ navigation }) => {
           source={{
             uri: "https://onix-systems.com/_next/image?url=https%3A%2F%2Fadmin.onix-systems.com%2Fuploads%2Fa9d64_g1e_W_Ah1_Cx_Ft_W_Cv_Qs06_RO_Ieku_Ze_271df36298.jpg&w=1920&q=100",
           }}
-          style={{ width: 1420, height: 710 }}
+          style={{ width: 896, height: 414 }}
         />
       </View>
       <Text style={styles.title}>Money-wise</Text>

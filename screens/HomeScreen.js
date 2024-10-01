@@ -13,13 +13,13 @@ const HomeScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.profileSection}>
-        {/* img not working */}
         <Image
           source={{
-            uri: "https://ehttps://aui.atlassian.com/aui/8.8/docs/images/avatar-person.svgxample.com/avatar.png",
+            uri: "https://aui.atlassian.com/aui/8.8/docs/images/avatar-person.svg",
           }}
           style={styles.avatar}
         />
+
         <Text style={styles.welcome}>Hello, Yaseen!</Text>
       </View>
 
