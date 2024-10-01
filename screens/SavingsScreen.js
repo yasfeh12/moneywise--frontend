@@ -9,39 +9,61 @@ const SavingsScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Savings Goals</Text>
-
       <View style={styles.card}>
-        <Text>Holiday Savings</Text>
-        <ProgressBar progress={progress} color="blue" />
-        <Button title="Delete" onPress={() => {}} />
+        <Text style={styles.cardTitle}>Holiday Savings</Text>
+        <ProgressBar progress={progress} color="#80FF00" />
+        <Button title="Delete" onPress={() => {}} color="#80FF00" />
       </View>
-
+      <View style={styles.addButtonContainer}>
+        <Button title="Add Goal" onPress={() => {}} color="#80FF00" />
+      </View>
       <TextInput
         placeholder="Add Saving Goal"
+        placeholderTextColor="#80FF00"
         style={styles.input}
         value={goal}
         onChangeText={setGoal}
       />
-      <Button title="Add Goal" onPress={() => {}} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  title: { fontSize: 24, marginBottom: 20 },
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#000F0C",
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+    color: "#80FF00",
+    fontWeight: "bold",
+  },
   card: {
     padding: 20,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#000F0C",
     marginBottom: 20,
     borderRadius: 10,
+    borderColor: "#80FF00",
+    borderWidth: 2,
+  },
+  cardTitle: {
+    fontSize: 18,
+    color: "#80FF00",
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: "#80FF00",
     borderWidth: 1,
     paddingHorizontal: 10,
     marginBottom: 20,
+    color: "#80FF00",
+    backgroundColor: "#000F0C",
+  },
+  addButtonContainer: {
+    marginTop: 20,
+    marginBottom: 10,
   },
 });
 

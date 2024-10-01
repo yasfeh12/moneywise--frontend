@@ -34,7 +34,6 @@ const UserProfileScreen = ({ navigation }) => {
       navigation.replace("Main");
     }
   };
-
   return (
     <View style={styles.container}>
       <View>
@@ -46,9 +45,16 @@ const UserProfileScreen = ({ navigation }) => {
         />
       </View>
       <Text style={styles.title}>Money-wise</Text>
-      <Button title="Sign Up" onPress={() => setSignUpModalVisible(true)} />
-      <Button title="Log In" onPress={() => setLoginModalVisible(true)} />
-
+      <Button
+        title="Sign Up"
+        onPress={() => setSignUpModalVisible(true)}
+        color="#80FF00"
+      />
+      <Button
+        title="Log In"
+        onPress={() => setLoginModalVisible(true)}
+        color="#80FF00"
+      />
       <Modal
         animationType="slide"
         transparent={true}
@@ -57,15 +63,17 @@ const UserProfileScreen = ({ navigation }) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
-            <Text>Sign Up</Text>
+            <Text style={styles.modalTitle}>Sign Up</Text>
             <TextInput
               placeholder="Username"
+              placeholderTextColor="#80FF00"
               style={styles.input}
               value={username}
               onChangeText={setUsername}
             />
             <TextInput
               placeholder="Password"
+              placeholderTextColor="#80FF00"
               style={styles.input}
               secureTextEntry
               value={password}
@@ -73,15 +81,26 @@ const UserProfileScreen = ({ navigation }) => {
             />
             <TextInput
               placeholder="Monthly Income"
+              placeholderTextColor="#80FF00"
               style={styles.input}
               value={monthlyIncome}
               onChangeText={setMonthlyIncome}
             />
-            <Button title="Submit" onPress={handleSignUpSubmit} />
+            <Button
+              title="Submit"
+              onPress={handleSignUpSubmit}
+              color="#80FF00"
+            />
+            <View style={styles.cancelButtonContainer}>
+              <Button
+                title="Cancel"
+                onPress={() => setSignUpModalVisible(false)}
+                color="#FF0000"
+              />
+            </View>
           </View>
         </View>
       </Modal>
-
       <Modal
         animationType="slide"
         transparent={true}
@@ -90,21 +109,34 @@ const UserProfileScreen = ({ navigation }) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalView}>
-            <Text>Log In</Text>
+            <Text style={styles.modalTitle}>Log In</Text>
             <TextInput
               placeholder="Username"
+              placeholderTextColor="#80FF00"
               style={styles.input}
               value={username}
               onChangeText={setUsername}
             />
             <TextInput
               placeholder="Password"
+              placeholderTextColor="#80FF00"
               style={styles.input}
               secureTextEntry
               value={password}
               onChangeText={setPassword}
             />
-            <Button title="Submit" onPress={handleLoginSubmit} />
+            <Button
+              title="Submit"
+              onPress={handleLoginSubmit}
+              color="#80FF00"
+            />
+            <View style={styles.cancelButtonContainer}>
+              <Button
+                title="Cancel"
+                onPress={() => setLoginModalVisible(false)}
+                color="#FF0000"
+              />
+            </View>
           </View>
         </View>
       </Modal>
@@ -113,27 +145,50 @@ const UserProfileScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center" },
-  title: { fontSize: 24, marginBottom: 20 },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#000F0C",
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+    color: "#80FF00",
+    fontWeight: "bold",
+  },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
   },
   modalView: {
-    backgroundColor: "white",
+    backgroundColor: "#000F0C",
     padding: 20,
     borderRadius: 10,
     width: "80%",
+    borderColor: "#80FF00",
+    borderWidth: 2,
+  },
+  modalTitle: {
+    fontSize: 18,
+    marginBottom: 15,
+    color: "#80FF00",
+    fontWeight: "bold",
   },
   input: {
     height: 40,
-    borderColor: "#ccc",
+    borderColor: "#80FF00",
     borderWidth: 1,
     marginBottom: 12,
     paddingHorizontal: 10,
+    color: "#80FF00",
     width: "100%",
+    backgroundColor: "#000F0C",
+  },
+  cancelButtonContainer: {
+    marginTop: 10,
   },
 });
 
