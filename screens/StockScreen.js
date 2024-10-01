@@ -1,75 +1,104 @@
-import React, { useState } from "react";
-import { View, Text, Button, StyleSheet, FlatList, ScrollView } from "react-native";
-import { VictoryChart, VictoryLine, VictoryAxis } from "victory-native";
-//dummy stock data
-const sampleStockData = [
-  { name: "Apple (AAPL)", price: 150, data: [{ x: 1, y: 130 }, { x: 2, y: 140 }, { x: 3, y: 150 }] },
-  { name: "Microsoft (MSFT)", price: 250, data: [{ x: 1, y: 230 }, { x: 2, y: 240 }, { x: 3, y: 250 }] },
-  { name: "Amazon (AMZN)", price: 3300, data: [{ x: 1, y: 3200 }, { x: 2, y: 3250 }, { x: 3, y: 3300 }] },
-  { name: "Google (GOOGL)", price: 2800, data: [{ x: 1, y: 2700 }, { x: 2, y: 2750 }, { x: 3, y: 2800 }] },
-  { name: "Facebook (META)", price: 350, data: [{ x: 1, y: 320 }, { x: 2, y: 330 }, { x: 3, y: 350 }] },
-  { name: "Tesla (TSLA)", price: 1000, data: [{ x: 1, y: 900 }, { x: 2, y: 950 }, { x: 3, y: 1000 }] },
-  { name: "Berkshire Hathaway (BRK.A)", price: 420000, data: [{ x: 1, y: 410000 }, { x: 2, y: 415000 }, { x: 3, y: 420000 }] },
-  { name: "NVIDIA (NVDA)", price: 650, data: [{ x: 1, y: 600 }, { x: 2, y: 625 }, { x: 3, y: 650 }] },
-  { name: "Visa (V)", price: 230, data: [{ x: 1, y: 220 }, { x: 2, y: 225 }, { x: 3, y: 230 }] },
-  { name: "Johnson & Johnson (JNJ)", price: 170, data: [{ x: 1, y: 160 }, { x: 2, y: 165 }, { x: 3, y: 170 }] }
+import React from "react";
+import { View, Text, Button, StyleSheet, ScrollView } from "react-native";
+import { LineChart } from "react-native-chart-kit";
+
+const stockData = [
+  {
+    name: "Apple (AAPL)",
+    data: [220, 210, 215, 230, 235],
+  },
+  {
+    name: "Microsoft (MSFT)",
+    data: [320, 310, 315, 330, 335],
+  },
+  {
+    name: "Amazon (AMZN)",
+    data: [190, 195, 200, 210, 215],
+  },
+  {
+    name: "Google (GOOGL)",
+    data: [145, 150, 155, 160, 165],
+  },
+  {
+    name: "Facebook (META)",
+    data: [250, 240, 245, 260, 265],
+  },
+  {
+    name: "Tesla (TSLA)",
+    data: [710, 700, 715, 720, 725],
+  },
+  {
+    name: "Berkshire Hathaway (BRK.A)",
+    data: [410, 400, 415, 430, 435],
+  },
+  {
+    name: "Visa (V)",
+    data: [220, 230, 235, 240, 245],
+  },
+  {
+    name: "Johnson & Johnson (JNJ)",
+    data: [160, 165, 170, 180, 185],
+  },
+  {
+    name: "Walmart (WMT)",
+    data: [130, 135, 140, 145, 150],
+  },
 ];
 
 const StockScreen = () => {
-  const [favoriteStocks, setFavoriteStocks] = useState([]);
-
-  const addToFavorites = (stock) => {
-    if (!favoriteStocks.includes(stock)) {
-      setFavoriteStocks([...favoriteStocks, stock]);
-    }
-  };
-
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>Top 10 Companies' Stocks</Text>
-
-      {/* List of top stocks */}
-      <FlatList
-        data={sampleStockData}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text>{item.name}</Text>
-            <Text>Price: £{item.price}</Text>
-            <Button title="Add to Favorites" onPress={() => addToFavorites(item)} />
-
-            {/* Chart for individual stock */}
-            <VictoryChart>
-              <VictoryLine data={item.data} />
-              <VictoryAxis dependentAxis />
-              <VictoryAxis />
-            </VictoryChart>
-          </View>
-        )}
-      />
-
-      <Text style={styles.subtitle}>Favorite Stocks</Text>
-      {/* List of favorite stocks */}
-      {favoriteStocks.length === 0 ? (
-        <Text>No favorite stocks yet.</Text>
-      ) : (
-        favoriteStocks.map((stock) => (
-          <Text key={stock.name}>{stock.name}</Text>
-        ))
-      )}
+      <Text style={styles.title}>Stocks</Text>
+      {stockData.map((stock, index) => (
+        <View key={index} style={styles.card}>
+          <Text style={styles.stockTitle}>{stock.name}</Text>
+          <LineChart
+            data={{
+              labels: ["Jan", "Feb", "Mar", "Apr", "May"],
+              datasets: [{ data: stock.data }],
+            }}
+            width={300}
+            height={200}
+            chartConfig={{
+              backgroundColor: "#000F0C",
+              backgroundGradientFrom: "#000F0C",
+              backgroundGradientTo: "#000F0C",
+              color: () => "#80FF00",
+              labelColor: () => "#80FF00",
+              strokeWidth: 2,
+            }}
+          />
+          <Button title="Add to Favorites" onPress={() => {}} color="#80FF00" />
+        </View>
+      ))}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  title: { fontSize: 24, marginBottom: 20 },
-  subtitle: { fontSize: 20, marginTop: 20 },
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#000F0C",
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+    color: "#80FF00",
+    fontWeight: "bold",
+  },
   card: {
     padding: 20,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#000F0C",
     marginBottom: 20,
     borderRadius: 10,
+    borderColor: "#80FF00",
+    borderWidth: 2,
+  },
+  stockTitle: {
+    fontSize: 18,
+    color: "#80FF00",
+    marginBottom: 10,
   },
 });
 

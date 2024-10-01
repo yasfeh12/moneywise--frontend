@@ -57,20 +57,41 @@ const SavingsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20 },
-  title: { fontSize: 24, marginBottom: 20 },
-  input: {
-    height: 40,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    paddingHorizontal: 10,
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#000F0C",
+  },
+  title: {
+    fontSize: 24,
     marginBottom: 20,
+    color: "#80FF00",
+    fontWeight: "bold",
   },
   card: {
     padding: 20,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#000F0C",
     marginBottom: 20,
     borderRadius: 10,
+    borderColor: "#80FF00",
+    borderWidth: 2,
+  },
+  cardTitle: {
+    fontSize: 18,
+    color: "#80FF00",
+  },
+  input: {
+    height: 40,
+    borderColor: "#80FF00",
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    marginBottom: 20,
+    color: "#80FF00",
+    backgroundColor: "#000F0C",
+  },
+  addButtonContainer: {
+    marginTop: 20,
+    marginBottom: 10,
   },
 });
 
