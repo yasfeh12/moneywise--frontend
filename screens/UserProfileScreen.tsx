@@ -10,20 +10,20 @@ import {
   Alert,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-
 interface UserProfileScreenProps {
   navigation: StackNavigationProp<any, any>;
 }
-
 const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
   navigation,
 }) => {
   const [signUpModalVisible, setSignUpModalVisible] = useState<boolean>(false);
   const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
+  const [forgotPasswordModalVisible, setForgotPasswordModalVisible] =
+    useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [monthlyIncome, setMonthlyIncome] = useState<string>("");
-
+  const [resetEmail, setResetEmail] = useState<string>("");
   const handleSignUpSubmit = () => {
     if (username === "" || password === "" || monthlyIncome === "") {
       Alert.alert("Error", "Please fill in all fields.");
@@ -42,6 +42,15 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
     }
   };
 
+  const handlePasswordReset = () => {
+    if (resetEmail === "") {
+      Alert.alert("Error", "Please enter your email or username.");
+    } else {
+      setForgotPasswordModalVisible(false);
+      Alert.alert("Success", "Password reset instructions sent to your email.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -53,16 +62,62 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
         />
       </View>
       <Text style={styles.title}>Money-wise</Text>
-      <Button
-        title="Sign Up"
-        onPress={() => setSignUpModalVisible(true)}
-        color="#80FF00"
-      />
-      <Button
-        title="Log In"
-        onPress={() => setLoginModalVisible(true)}
-        color="#80FF00"
-      />
+      <View style={{ margin: 10 }}>
+        <Button
+          title="Log In"
+          onPress={() => setLoginModalVisible(true)}
+          color="#80FF00"
+        />
+      </View>
+
+      <View style={{ margin: 10 }}>
+        <Button
+          title="Log In"
+          onPress={() => setLoginModalVisible(true)}
+          color="#80FF00"
+        />
+      </View>
+
+      <View style={{ margin: 10 }}>
+        <Button
+          title="Forgot Password"
+          onPress={() => setForgotPasswordModalVisible(true)}
+          color="red"
+        />
+      </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={forgotPasswordModalVisible}
+        onRequestClose={() => setForgotPasswordModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>Forgot Password</Text>
+            <TextInput
+              placeholder="Enter email or username"
+              placeholderTextColor="#80FF00"
+              style={styles.input}
+              value={resetEmail}
+              onChangeText={setResetEmail}
+            />
+            <Button
+              title="Submit"
+              onPress={handlePasswordReset}
+              color="#80FF00"
+            />
+            <View style={styles.cancelButtonContainer}>
+              <Button
+                title="Cancel"
+                onPress={() => setForgotPasswordModalVisible(false)}
+                color="#FF0000"
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       <Modal
         animationType="slide"
         transparent={true}
@@ -109,6 +164,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
           </View>
         </View>
       </Modal>
+
       <Modal
         animationType="slide"
         transparent={true}
