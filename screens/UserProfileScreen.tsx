@@ -9,13 +9,20 @@ import {
   StyleSheet,
   Alert,
 } from "react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-const UserProfileScreen = ({ navigation }) => {
-  const [signUpModalVisible, setSignUpModalVisible] = useState(false);
-  const [loginModalVisible, setLoginModalVisible] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [monthlyIncome, setMonthlyIncome] = useState("");
+interface UserProfileScreenProps {
+  navigation: StackNavigationProp<any, any>;
+}
+
+const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
+  navigation,
+}) => {
+  const [signUpModalVisible, setSignUpModalVisible] = useState<boolean>(false);
+  const [loginModalVisible, setLoginModalVisible] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [monthlyIncome, setMonthlyIncome] = useState<string>("");
 
   const handleSignUpSubmit = () => {
     if (username === "" || password === "" || monthlyIncome === "") {
@@ -34,6 +41,7 @@ const UserProfileScreen = ({ navigation }) => {
       navigation.replace("Main");
     }
   };
+
   return (
     <View style={styles.container}>
       <View>

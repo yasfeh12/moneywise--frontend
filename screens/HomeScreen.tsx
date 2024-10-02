@@ -8,8 +8,13 @@ import {
   ScrollView,
 } from "react-native";
 import { ProgressBar } from "react-native-paper";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-const HomeScreen = ({ navigation }) => {
+interface HomeScreenProps {
+  navigation: StackNavigationProp<any, any>;
+}
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.profileSection}>
@@ -19,7 +24,6 @@ const HomeScreen = ({ navigation }) => {
           }}
           style={styles.avatar}
         />
-
         <Text style={styles.welcome}>Hello, Yaseen!</Text>
       </View>
 

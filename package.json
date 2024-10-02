@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.3",
+    "@react-native-picker/picker": "^2.8.1",
     "@react-navigation/bottom-tabs": "^6.6.1",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/stack": "^6.4.1",
+    "@types/react": "~18.2.79",
     "expo": "^51.0.34",
     "expo-status-bar": "~1.12.1",
     "react": "18.2.0",
@@ -27,6 +29,7 @@
     "react-native-svg": "^15.7.1",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.10",
+    "typescript": "~5.3.3",
     "victory-native": "^41.4.0"
   },
   "devDependencies": {
