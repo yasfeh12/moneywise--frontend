@@ -2,12 +2,23 @@ import React from "react";
 import { View, Text, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { PieChart, BarChart } from "react-native-gifted-charts";
 import { LineChart } from "react-native-chart-kit";
+import { StringLiteral } from "typescript";
 
-const pieData = [
+interface PieSavingsData {
+  value: number;
+  color: string;
+  text: string;
+}
+const pieSavingsData: PieSavingsData[] = [
   { value: 47, color: "#2979FF", text: "spent" }, // 60% spent
   { value: 53, color: "#00E5FF", text: "saved" }, // 40% saved
 ];
-const barData = [
+interface BarCategoriesData {
+  value: number;
+  label: string;
+  frontColor: string;
+}
+const barCategoriesData: BarCategoriesData[] = [
   { value: 150, label: "Utilities", frontColor: "#2979FF" },
   { value: 200, label: "Food", frontColor: "#00E5FF" },
   { value: 100, label: "Entertainment", frontColor: "#FF4081" },
@@ -21,13 +32,21 @@ const barData = [
   { value: 130, label: "Groceries", frontColor: "#FF9800" },
   { value: 40, label: "Animal Care", frontColor: "#607D8B" },
 ];
-
-const balanceOverTimeData = {
+interface BalanceOverTimeDataLineGraph {
+  labels: string[];
+  datasets: {
+    data: number[];
+    color: () => string;
+    strokeWidth: number;
+  }[]; //array of object
+  legend: string[];
+}
+const balanceOverTimeData: BalanceOverTimeDataLineGraph = {
   labels: [
-    "01 Sep", // Salary
-    "02 Sep", // Mortgage
-    "03 Sep", // Starbucks
-    "04 Sep",
+    "01 Sep", // +2400 salary
+    "02 Sep", // - Mortgage
+    "03 Sep", // - Starbucks
+    "04 Sep", // -
     "01 Oct",
     "02 Oct",
   ],
@@ -43,7 +62,7 @@ const balanceOverTimeData = {
 
 const screenWidth = Dimensions.get("window").width; // get width of screen
 
-const ReportScreen = () => {
+const ReportScreen: React.FC = (): JSX.Element => {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
@@ -52,7 +71,7 @@ const ReportScreen = () => {
       <View style={styles.chartContainer}>
         <Text style={styles.title}>Pie Chart - Amount Saved</Text>
         <PieChart
-          data={pieData}
+          data={pieSavingsData}
           donut
           showText={true}
           radius={120}
@@ -67,7 +86,7 @@ const ReportScreen = () => {
       <View style={styles.chartContainer}>
         <Text style={styles.title}>Bar Chart - Expenses/ Category</Text>
         <BarChart
-          data={barData}
+          data={barCategoriesData}
           barWidth={30}
           barBorderRadius={5}
           height={300}
