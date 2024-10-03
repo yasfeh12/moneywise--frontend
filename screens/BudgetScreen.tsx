@@ -5,18 +5,18 @@ import {
   TextInput,
   Button,
   StyleSheet,
-  Picker,
   Switch,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { ProgressBar } from "react-native-paper";
 
-const BudgetScreen = () => {
-  const [expense, setExpense] = useState("");
-  const [category, setCategory] = useState("Food");
-  const [isEssential, setIsEssential] = useState(false);
-  const [progress, setProgress] = useState(0.4);
+const BudgetScreen: React.FC = () => {
+  const [expense, setExpense] = useState<string>("");
+  const [category, setCategory] = useState<string>("Food");
+  const [isEssential, setIsEssential] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0.4);
 
-  const categories = [
+  const categories: string[] = [
     "Food",
     "Clothes",
     "Childcare",
@@ -54,7 +54,7 @@ const BudgetScreen = () => {
       </View>
       <TextInput
         placeholder="Enter price £££"
-        placeholderTextColor="#80FF00"
+        placeholderTextColor="white"
         style={styles.input}
         keyboardType="numeric"
         value={expense}
@@ -71,17 +71,14 @@ const BudgetScreen = () => {
       </Picker>
       <View style={styles.switchContainer}>
         <Text style={styles.switchLabel}>Essential Expense</Text>
-        <View style={styles.switchWrapper}>
-          <Switch
-            value={isEssential}
-            onValueChange={setIsEssential}
-            trackColor={{ false: "#767577", true: "#80FF00" }}
-            thumbColor={isEssential ? "#80FF00" : "#f4f3f4"}
-            style={styles.switch}
-          />
-        </View>
+        <Switch
+          value={isEssential}
+          onValueChange={setIsEssential}
+          trackColor={{ false: "#767577", true: "#80FF00" }}
+          thumbColor={isEssential ? "#80FF00" : "#f4f3f4"}
+        />
       </View>
-      <Button title="Add Expense" onPress={handleAddExpense} color="#80FF00" />{" "}
+      <Button title="Add Expense" onPress={handleAddExpense} color="#80FF00" />
     </View>
   );
 };
@@ -123,7 +120,7 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     marginBottom: 20,
-    color: "#80FF00",
+    color: "white",
     backgroundColor: "#000F0C",
   },
   switchContainer: {
@@ -133,10 +130,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   switchLabel: {
-    color: "#80FF00",
-  },
-  switchWrapper: {
-    transform: [{ scale: 1.5 }],
+    color: "white",
   },
 });
 

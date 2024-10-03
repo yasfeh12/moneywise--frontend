@@ -8,15 +8,19 @@ import {
   ScrollView,
 } from "react-native";
 import { ProgressBar } from "react-native-paper";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-const HomeScreen = ({ navigation }) => {
+interface HomeScreenProps {
+  navigation: StackNavigationProp<any, any>;
+}
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.profileSection}>
-        {/* img not working */}
         <Image
           source={{
-            uri: "https://ehttps://aui.atlassian.com/aui/8.8/docs/images/avatar-person.svgxample.com/avatar.png",
+            uri: "https://aui.atlassian.com/aui/8.8/docs/images/avatar-person.svg",
           }}
           style={styles.avatar}
         />
@@ -85,7 +89,7 @@ const styles = StyleSheet.create({
   info: {
     fontSize: 16,
     marginBottom: 5,
-    color: "#80FF00",
+    color: "white",
   },
   progressTitle: {
     fontSize: 16,
