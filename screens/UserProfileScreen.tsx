@@ -8,11 +8,17 @@ import {
   Modal,
   StyleSheet,
   Alert,
+  ScrollView,
+  Dimensions,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
+
+const { width } = Dimensions.get("window");
+
 interface UserProfileScreenProps {
   navigation: StackNavigationProp<any, any>;
 }
+
 const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
   navigation,
 }) => {
@@ -24,6 +30,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
   const [password, setPassword] = useState<string>("");
   const [monthlyIncome, setMonthlyIncome] = useState<string>("");
   const [resetEmail, setResetEmail] = useState<string>("");
+
   const handleSignUpSubmit = () => {
     if (username === "" || password === "" || monthlyIncome === "") {
       Alert.alert("Error", "Please fill in all fields.");
@@ -53,16 +60,17 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
 
   return (
     <View style={styles.container}>
-      <View>
+      <View style={styles.imageContainer}>
         <Image
           source={{
             uri: "https://onix-systems.com/_next/image?url=https%3A%2F%2Fadmin.onix-systems.com%2Fuploads%2Fa9d64_g1e_W_Ah1_Cx_Ft_W_Cv_Qs06_RO_Ieku_Ze_271df36298.jpg&w=1920&q=100",
           }}
-          style={{ width: 896, height: 414 }}
+          style={styles.image}
         />
       </View>
       <Text style={styles.title}>Money-wise</Text>
-      <View style={{ margin: 10 }}>
+
+      <View style={styles.buttonContainer}>
         <Button
           title="Log In"
           onPress={() => setLoginModalVisible(true)}
@@ -70,15 +78,15 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
         />
       </View>
 
-      <View style={{ margin: 10 }}>
+      <View style={styles.buttonContainer}>
         <Button
-          title="Log In"
-          onPress={() => setLoginModalVisible(true)}
+          title="Sign Up"
+          onPress={() => setSignUpModalVisible(true)}
           color="#80FF00"
         />
       </View>
 
-      <View style={{ margin: 10 }}>
+      <View style={styles.buttonContainer}>
         <Button
           title="Forgot Password"
           onPress={() => setForgotPasswordModalVisible(true)}
@@ -93,28 +101,33 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
         onRequestClose={() => setForgotPasswordModalVisible(false)}
       >
         <View style={styles.modalContainer}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Forgot Password</Text>
-            <TextInput
-              placeholder="Enter email or username"
-              placeholderTextColor="#80FF00"
-              style={styles.input}
-              value={resetEmail}
-              onChangeText={setResetEmail}
-            />
-            <Button
-              title="Submit"
-              onPress={handlePasswordReset}
-              color="#80FF00"
-            />
-            <View style={styles.cancelButtonContainer}>
-              <Button
-                title="Cancel"
-                onPress={() => setForgotPasswordModalVisible(false)}
-                color="#FF0000"
+          <ScrollView
+            contentContainerStyle={styles.scrollViewContent}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.modalView}>
+              <Text style={styles.modalTitle}>Forgot Password</Text>
+              <TextInput
+                placeholder="Enter email or username"
+                placeholderTextColor="#80FF00"
+                style={styles.input}
+                value={resetEmail}
+                onChangeText={setResetEmail}
               />
+              <Button
+                title="Submit"
+                onPress={handlePasswordReset}
+                color="#80FF00"
+              />
+              <View style={styles.cancelButtonContainer}>
+                <Button
+                  title="Cancel"
+                  onPress={() => setForgotPasswordModalVisible(false)}
+                  color="#FF0000"
+                />
+              </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
       </Modal>
 
@@ -125,43 +138,48 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
         onRequestClose={() => setSignUpModalVisible(false)}
       >
         <View style={styles.modalContainer}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Sign Up</Text>
-            <TextInput
-              placeholder="Username"
-              placeholderTextColor="#80FF00"
-              style={styles.input}
-              value={username}
-              onChangeText={setUsername}
-            />
-            <TextInput
-              placeholder="Password"
-              placeholderTextColor="#80FF00"
-              style={styles.input}
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-            />
-            <TextInput
-              placeholder="Monthly Income"
-              placeholderTextColor="#80FF00"
-              style={styles.input}
-              value={monthlyIncome}
-              onChangeText={setMonthlyIncome}
-            />
-            <Button
-              title="Submit"
-              onPress={handleSignUpSubmit}
-              color="#80FF00"
-            />
-            <View style={styles.cancelButtonContainer}>
-              <Button
-                title="Cancel"
-                onPress={() => setSignUpModalVisible(false)}
-                color="#FF0000"
+          <ScrollView
+            contentContainerStyle={styles.scrollViewContent}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.modalView}>
+              <Text style={styles.modalTitle}>Sign Up</Text>
+              <TextInput
+                placeholder="Username"
+                placeholderTextColor="#80FF00"
+                style={styles.input}
+                value={username}
+                onChangeText={setUsername}
               />
+              <TextInput
+                placeholder="Password"
+                placeholderTextColor="#80FF00"
+                style={styles.input}
+                secureTextEntry
+                value={password}
+                onChangeText={setPassword}
+              />
+              <TextInput
+                placeholder="Monthly Income"
+                placeholderTextColor="#80FF00"
+                style={styles.input}
+                value={monthlyIncome}
+                onChangeText={setMonthlyIncome}
+              />
+              <Button
+                title="Submit"
+                onPress={handleSignUpSubmit}
+                color="#80FF00"
+              />
+              <View style={styles.cancelButtonContainer}>
+                <Button
+                  title="Cancel"
+                  onPress={() => setSignUpModalVisible(false)}
+                  color="#FF0000"
+                />
+              </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
       </Modal>
 
@@ -172,36 +190,41 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
         onRequestClose={() => setLoginModalVisible(false)}
       >
         <View style={styles.modalContainer}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalTitle}>Log In</Text>
-            <TextInput
-              placeholder="Username"
-              placeholderTextColor="#80FF00"
-              style={styles.input}
-              value={username}
-              onChangeText={setUsername}
-            />
-            <TextInput
-              placeholder="Password"
-              placeholderTextColor="#80FF00"
-              style={styles.input}
-              secureTextEntry
-              value={password}
-              onChangeText={setPassword}
-            />
-            <Button
-              title="Submit"
-              onPress={handleLoginSubmit}
-              color="#80FF00"
-            />
-            <View style={styles.cancelButtonContainer}>
-              <Button
-                title="Cancel"
-                onPress={() => setLoginModalVisible(false)}
-                color="#FF0000"
+          <ScrollView
+            contentContainerStyle={styles.scrollViewContent}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.modalView}>
+              <Text style={styles.modalTitle}>Log In</Text>
+              <TextInput
+                placeholder="Username"
+                placeholderTextColor="#80FF00"
+                style={styles.input}
+                value={username}
+                onChangeText={setUsername}
               />
+              <TextInput
+                placeholder="Password"
+                placeholderTextColor="#80FF00"
+                style={styles.input}
+                secureTextEntry
+                value={password}
+                onChangeText={setPassword}
+              />
+              <Button
+                title="Submit"
+                onPress={handleLoginSubmit}
+                color="#80FF00"
+              />
+              <View style={styles.cancelButtonContainer}>
+                <Button
+                  title="Cancel"
+                  onPress={() => setLoginModalVisible(false)}
+                  color="#FF0000"
+                />
+              </View>
             </View>
-          </View>
+          </ScrollView>
         </View>
       </Modal>
     </View>
@@ -214,12 +237,27 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#000F0C",
+    padding: 10,
+  },
+  imageContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  image: {
+    width: width * 0.9,
+    height: width * 0.45,
+    resizeMode: "contain",
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     marginBottom: 20,
     color: "#80FF00",
     fontWeight: "bold",
+  },
+  buttonContainer: {
+    width: "90%",
+    marginVertical: 5,
   },
   modalContainer: {
     flex: 1,
@@ -227,11 +265,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.8)",
   },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   modalView: {
     backgroundColor: "#000F0C",
     padding: 20,
     borderRadius: 10,
-    width: "80%",
+    width: "90%",
     borderColor: "#80FF00",
     borderWidth: 2,
   },

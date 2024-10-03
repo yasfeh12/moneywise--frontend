@@ -54,7 +54,7 @@ const BudgetScreen: React.FC = () => {
       </View>
       <TextInput
         placeholder="Enter price £££"
-        placeholderTextColor="#80FF00"
+        placeholderTextColor="white"
         style={styles.input}
         keyboardType="numeric"
         value={expense}
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     marginBottom: 20,
-    color: "#80FF00",
+    color: "white",
     backgroundColor: "#000F0C",
   },
   switchContainer: {
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   switchLabel: {
-    color: "#80FF00",
+    color: "white",
   },
 });
 

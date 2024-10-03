@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   info: {
     fontSize: 16,
     marginBottom: 5,
-    color: "#80FF00",
+    color: "white",
   },
   progressTitle: {
     fontSize: 16,
