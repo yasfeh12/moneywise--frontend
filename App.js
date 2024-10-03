@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -13,6 +13,7 @@ import { Ionicons } from "react-native-vector-icons";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
 const handleLogout = (navigation) => {
   Alert.alert(
     "Log Out",
@@ -24,82 +25,83 @@ const handleLogout = (navigation) => {
       },
       {
         text: "Log Out",
-        onPress: () => navigation.replace("Moneywise"), // this might need changing but i cant test alerts as am on windows os.
+        onPress: () => navigation.replace("Moneywise"),
       },
     ],
     { cancelable: true }
   );
 };
 
+const LogoutButton = ({ navigation }) => {
+  return (
+    <TouchableOpacity
+      style={styles.logoutButton}
+      onPress={() => handleLogout(navigation)}
+    >
+      <Ionicons name="log-out-outline" size={16} color="#FFFFFF" />
+      <Text style={styles.logoutButtonText}>Log Out</Text>
+    </TouchableOpacity>
+  );
+};
+
 function MainTabs({ navigation }) {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ color, size }) => {
+          let iconName;
+
+          if (route.name === "Home") {
+            iconName = "home-outline";
+          } else if (route.name === "Budgets") {
+            iconName = "wallet-outline";
+          } else if (route.name === "Reports") {
+            iconName = "stats-chart-outline";
+          } else if (route.name === "Savings") {
+            iconName = "cash-outline";
+          } else if (route.name === "Stocks") {
+            iconName = "trending-up-outline";
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: "#80FF00",
+        tabBarInactiveTintColor: "gray",
+      })}
+    >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" color={color} size={size} />
-          ),
-          headerRight: () => (
-            <Button
-              onPress={() => handleLogout(navigation)}
-              title="Log Out"
-              color="#ff0000"
-            />
-          ),
+          headerRight: () => <LogoutButton navigation={navigation} />,
         }}
       />
       <Tab.Screen
         name="Budgets"
         component={BudgetScreen}
         options={{
-          headerRight: () => (
-            <Button
-              onPress={() => handleLogout(navigation)}
-              title="Log Out"
-              color="#ff0000"
-            />
-          ),
+          headerRight: () => <LogoutButton navigation={navigation} />,
         }}
       />
       <Tab.Screen
         name="Reports"
         component={ReportScreen}
         options={{
-          headerRight: () => (
-            <Button
-              onPress={() => handleLogout(navigation)}
-              title="Log Out"
-              color="#ff0000"
-            />
-          ),
+          headerRight: () => <LogoutButton navigation={navigation} />,
         }}
       />
       <Tab.Screen
         name="Savings"
         component={SavingsScreen}
         options={{
-          headerRight: () => (
-            <Button
-              onPress={() => handleLogout(navigation)}
-              title="Log Out"
-              color="#ff0000"
-            />
-          ),
+          headerRight: () => <LogoutButton navigation={navigation} />,
         }}
       />
       <Tab.Screen
         name="Stocks"
         component={StockScreen}
         options={{
-          headerRight: () => (
-            <Button
-              onPress={() => handleLogout(navigation)}
-              title="Log Out"
-              color="#ff0000"
-            />
-          ),
+          headerRight: () => <LogoutButton navigation={navigation} />,
         }}
       />
     </Tab.Navigator>
@@ -122,3 +124,20 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  logoutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginRight: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    backgroundColor: "#FF6347",
+    borderRadius: 8,
+  },
+  logoutButtonText: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    marginLeft: 5,
+  },
+});

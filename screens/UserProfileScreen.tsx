@@ -109,7 +109,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
               <Text style={styles.modalTitle}>Forgot Password</Text>
               <TextInput
                 placeholder="Enter email or username"
-                placeholderTextColor="#80FF00"
+                placeholderTextColor="white"
                 style={styles.input}
                 value={resetEmail}
                 onChangeText={setResetEmail}
@@ -146,14 +146,14 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
               <Text style={styles.modalTitle}>Sign Up</Text>
               <TextInput
                 placeholder="Username"
-                placeholderTextColor="#80FF00"
+                placeholderTextColor="white"
                 style={styles.input}
                 value={username}
                 onChangeText={setUsername}
               />
               <TextInput
                 placeholder="Password"
-                placeholderTextColor="#80FF00"
+                placeholderTextColor="white"
                 style={styles.input}
                 secureTextEntry
                 value={password}
@@ -161,7 +161,7 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
               />
               <TextInput
                 placeholder="Monthly Income"
-                placeholderTextColor="#80FF00"
+                placeholderTextColor="white"
                 style={styles.input}
                 value={monthlyIncome}
                 onChangeText={setMonthlyIncome}
@@ -198,14 +198,14 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
               <Text style={styles.modalTitle}>Log In</Text>
               <TextInput
                 placeholder="Username"
-                placeholderTextColor="#80FF00"
+                placeholderTextColor="white"
                 style={styles.input}
                 value={username}
                 onChangeText={setUsername}
               />
               <TextInput
                 placeholder="Password"
-                placeholderTextColor="#80FF00"
+                placeholderTextColor="white"
                 style={styles.input}
                 secureTextEntry
                 value={password}
