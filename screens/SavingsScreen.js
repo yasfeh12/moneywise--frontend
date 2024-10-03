@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   View,
   Text,
@@ -8,11 +9,44 @@ import {
   FlatList,
 } from "react-native";
 import { ProgressBar } from "react-native-paper";
+import { TouchableOpacity } from "react-native";
+
+const api = axios.create({baseURL: "http://localhost:9090/api", timeout: 1000 })
 
 const SavingsScreen = () => {
   const [goalName, setGoalName] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
   const [savingsGoals, setSavingsGoals] = useState([]);
+  const [error, setError] = useState(false)
+
+
+  const getGoals = () => {
+  return api.get("/goals").then((response) => {
+      return response.data
+  })
+}
+
+//    const postGoals = (newGoal, goal_id) => {
+//   return api.post(`/goals/${goal_id}`, newGoal).then((response)=>{
+//       return response.data
+//   })
+// }
+  const deletingGoal = (goal_id) => {
+  return api.delete(`/goals/${goal_id}`, goal_id).then(()=>{
+      console.log("item removed")
+  })
+}
+
+useEffect(() => {
+  getGoals()
+    .then(({goals}) => {
+      console.log(goals)
+      setSavingsGoals(goals)
+    })
+    .catch((err) => {
+      console.log(err)
+    });
+}, []);
 
   const addSavingsGoal = () => {
     if (goalName && targetAmount) {
@@ -25,9 +59,17 @@ const SavingsScreen = () => {
     }
   };
 
-  const deleteGoal = (id) => {
-    setSavingsGoals(savingsGoals.filter((goal) => goal.id !== id));
+  const deleteGoal = (goal_id) => {
+    deletingGoal(goal_id).then(()=>{
+      setError(false)
+      setSavingsGoals(savingsGoals.filter((goal) => goal.goal_id !== goal_id));
+
+    }).catch(()=> {
+      console.log("in catch")
+      setError({msg: "failed to delete", goalId: goal_id})
+    })
   };
+
 
   return (
     <View style={styles.container}>
@@ -52,14 +94,15 @@ const SavingsScreen = () => {
 
       <FlatList
         data={savingsGoals}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.goal_id.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Text style={styles.cardText}>{item.name}</Text>{" "}
-            <Text style={styles.cardText}>Target: £{item.target}</Text>{" "}
-            <ProgressBar progress={item.progress} color="blue" />
-            <Button title="Delete" onPress={() => deleteGoal(item.id)} />
-          </View>
+                <Text style={styles.cardText}>{item.name}</Text>{" "}
+                <Text style={styles.cardText}>Target: £{item.target_amount}</Text>{" "}
+                <Button title="Delete" onPress={() => deleteGoal(item.goal_id)} />
+                  {error.goalId && error.goalId === item.goal_id && (<Text>{error.msg}</Text>)}
+                <ProgressBar progress={item.amount_saved} color="blue"/>
+                </View>
         )}
       />
     </View>
@@ -103,6 +146,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
   },
+  progress: {
+    marginBottom: 0,
+    padding: 0,
+  }
 });
 
 export default SavingsScreen;
