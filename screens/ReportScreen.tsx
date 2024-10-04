@@ -4,9 +4,10 @@ import { PieChart, BarChart } from "react-native-gifted-charts";
 import { LineChart } from "react-native-chart-kit";
 import axios from "axios";
 import ToggleTheme from "../components/ToggleTheme";
+import { ThemeContext } from "../utils/ThemeContext";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:9090",
+  baseURL: "https://localhost:8080",
   timeout: 1000,
 });
 
@@ -75,6 +76,14 @@ const ReportScreen: React.FC = (): JSX.Element => {
     PieSpentvsSavingsData[] | undefined
   >(undefined);
   const [loading, setLoading] = useState<boolean>(true);
+  const { theme, setTheme } = useContext(ThemeContext);
+
+  const buttonThemeHelper = () => {
+    return [
+      styles.scrollContainer,
+      theme === "light" ? styles.lightTheme : styles.darkTheme,
+    ];
+  };
 
   useEffect(() => {
     let endpoint = "/api/overview";
@@ -101,7 +110,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
       });
   }, []);
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <ScrollView contentContainerStyle={buttonThemeHelper()}>
       <View style={styles.container}>
         <Text style={styles.title}>Monthly Financial Report 1</Text>
       </View>
@@ -186,6 +195,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
           />
         )}
       </View>
+      <ToggleTheme />
     </ScrollView>
   );
 };
@@ -210,6 +220,12 @@ const styles = StyleSheet.create({
   chartContainer: {
     marginBottom: 40,
     marginHorizontal: 10,
+  },
+  lightTheme: {
+    backgroundColor: "#333333",
+  },
+  darkTheme: {
+    backgroundColor: "#FFFFFF",
   },
 });
 

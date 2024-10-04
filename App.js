@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
-import { NavigationContainer, ThemeProvider } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./screens/HomeScreen";
@@ -10,6 +10,7 @@ import SavingsScreen from "./screens/SavingsScreen";
 import StockScreen from "./screens/StockScreen";
 import UserProfileScreen from "./screens/UserProfileScreen";
 import { Ionicons } from "react-native-vector-icons";
+import { ThemeProvider } from "./utils/ThemeContext";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
