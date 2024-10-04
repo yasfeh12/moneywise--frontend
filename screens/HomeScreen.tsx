@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   View,
   Text,
@@ -10,11 +11,68 @@ import {
 import { ProgressBar } from "react-native-paper";
 import { StackNavigationProp } from "@react-navigation/stack";
 
+interface OverviewData {
+  overview: {
+    income: number;
+    monthlyBills: number;
+    spending: number;
+    remainingBalance: number;
+    totalGoalsProgress: number;
+    totalGoalsTarget: number;
+  };
+}
+
 interface HomeScreenProps {
   navigation: StackNavigationProp<any, any>;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+  const [overviewData, setOverviewData] = useState<OverviewData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:9090/api/overview")
+      .then((response) => {
+        setOverviewData(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching overview data:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.info}>Loading...</Text>
+      </View>
+    );
+  }
+
+  if (!overviewData || !overviewData.overview) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.info}>Failed to load data</Text>
+      </View>
+    );
+  }
+
+  console.log(overviewData.overview, "herer line 59");
+
+  const {
+    income,
+    monthlyBills,
+    spending,
+    remainingBalance,
+    totalGoalsProgress,
+    totalGoalsTarget,
+  } = overviewData.overview;
+
+  const progress =
+    totalGoalsTarget > 0 ? totalGoalsProgress / totalGoalsTarget : 0;
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.profileSection}>
@@ -29,13 +87,23 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
       <Text style={styles.title}>Account Overview</Text>
       <View style={styles.card}>
-        <Text style={styles.info}>Monthly Income: ££</Text>
-        <Text style={styles.info}>Monthly Bills: ££</Text>
-        <Text style={styles.info}>Savings Goal: ££</Text>
+        <Text style={styles.info}>Monthly Income: £{income ?? 0}</Text>
+        <Text style={styles.info}>Monthly Bills: £{monthlyBills ?? 0}</Text>
+        <Text style={styles.info}>Spending: £{spending ?? 0}</Text>
+        <Text style={styles.info}>
+          Remaining Balance: £{remainingBalance ?? 0}
+        </Text>
       </View>
 
       <Text style={styles.progressTitle}>Savings Goal Progress</Text>
-      <ProgressBar progress={0.7} color="#80FF00" style={styles.progressBar} />
+      <ProgressBar
+        progress={progress}
+        color="#80FF00"
+        style={styles.progressBar}
+      />
+      <Text style={styles.info}>
+        Progress: £{totalGoalsProgress ?? 0} / £{totalGoalsTarget ?? 0}
+      </Text>
 
       <Button
         title="Edit Budgets"
@@ -100,6 +168,16 @@ const styles = StyleSheet.create({
   progressBar: {
     height: 10,
     borderRadius: 5,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
