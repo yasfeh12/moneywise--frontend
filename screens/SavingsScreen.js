@@ -77,29 +77,37 @@ const addSavingsGoal = () => {
 };
 
 
-  const updateSavingsProgress = (goal_id) => {
-    const savedAmount = parseFloat(amountSaved[goal_id]) || 0;
+const updateSavingsProgress = (goal_id) => {
+  const savedAmount = parseFloat(amountSaved[goal_id]) || 0;
 
-    if (savedAmount > 0) {
-      const goalToUpdate = savingsGoals.find(goal => goal.goal_id === goal_id);
-      const updatedGoal = { amount_saved: goalToUpdate.amount_saved + savedAmount };
+  const goalToUpdate = savingsGoals.find(goal => goal.goal_id === goal_id);
+  const newSavedAmount = parseFloat(goalToUpdate.amount_saved) + savedAmount;
 
-      patchGoal(goal_id, updatedGoal)
-        .then((updatedGoalData) => {
-          setSavingsGoals(savingsGoals.map((goal) =>
-            goal.goal_id === goal_id
-              ? { ...goal, amount_saved: updatedGoalData.amount_saved }
-              : goal
-          ));
-          setAmountSaved({ ...amountSaved, [goal_id]: "" });
-        })
-        .catch((err) => {
-          console.log("Failed to update goal", err.message);
-        });
-    } else {
-      setError({ msg: "Amount saved must be a positive number greater than 0", goalId: goal_id });
-    }
-  };
+  if (newSavedAmount > goalToUpdate.target_amount) {
+    setError({ msg: "Amount saved exceeds target", goalId: goal_id });
+    return;
+  }
+
+  if (savedAmount > 0) {
+    const updatedGoal = { amount_saved: newSavedAmount };
+
+    patchGoal(goal_id, updatedGoal)
+      .then((updatedGoalData) => {
+        setSavingsGoals(savingsGoals.map((goal) =>
+          goal.goal_id === goal_id
+            ? { ...goal, amount_saved: updatedGoalData.amount_saved }
+            : goal
+        ));
+        setAmountSaved({ ...amountSaved, [goal_id]: "" });
+      })
+      .catch((err) => {
+        console.log("Failed to update goal", err.message);
+      });
+  } else {
+    setError({ msg: "Amount saved must be a positive number greater than 0", goalId: goal_id });
+  }
+};
+
 
 
   const handleAmountSavedChange = (goal_id, value) => {
@@ -159,6 +167,7 @@ const addSavingsGoal = () => {
                 <Button title="Delete" onPress={() => deleteGoal(item.goal_id)} />
                   {error.goalId && error.goalId === item.goal_id && (<Text>{error.msg}</Text>)}
                 <ProgressBar progress={item.target_amount ? item.amount_saved / item.target_amount : 0} color="blue"/>
+                <Text style={styles.cardText}>Progress: {item.target_amount ? ((item.amount_saved / item.target_amount) * 100).toFixed(2) : 0}%</Text>
                 </View>
         )}
       />
