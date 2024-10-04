@@ -18,7 +18,7 @@ const SavingsScreen = () => {
   const [targetAmount, setTargetAmount] = useState("");
   const [savingsGoals, setSavingsGoals] = useState([]);
   const [error, setError] = useState(false)
-
+  const [amountSaved, setAmountSaved] = useState("");
 
   const getGoals = () => {
   return api.get("/goals").then((response) => {
@@ -26,11 +26,17 @@ const SavingsScreen = () => {
   })
 }
 
-//    const postGoals = (newGoal, goal_id) => {
-//   return api.post(`/goals/${goal_id}`, newGoal).then((response)=>{
-//       return response.data
-//   })
-// }
+  const postGoal = (newGoal) => {
+  return api.post("/goals", newGoal).then((response) => {
+      return response.data
+  })
+}
+  const patchGoal = (goal_id, updatedGoal) => {
+  return api.patch(`/goals/${goal_id}`, updatedGoal).then((response) => {
+      return response.data
+  })
+}
+
   const deletingGoal = (goal_id) => {
   return api.delete(`/goals/${goal_id}`, goal_id).then(()=>{
       console.log("item removed")
@@ -50,13 +56,35 @@ useEffect(() => {
 
   const addSavingsGoal = () => {
     if (goalName && targetAmount) {
-      setSavingsGoals([
-        ...savingsGoals,
-        { id: Date.now(), name: goalName, target: targetAmount, progress: 0 },
-      ]);
-      setGoalName("");
-      setTargetAmount("");
+      const newGoal = {
+        name: goalName,
+        target_amount: targetAmount,
+        amount_saved: 0,
+      };
+      postGoal(newGoal).then((newGoal) => {
+        setSavingsGoals([...savingsGoals, newGoal]);
+        setGoalName("");
+        setTargetAmount("");
+      }).catch((err) => {
+        console.log("failed to add a goal", err.message);
+
+      });
     }
+  };
+
+  const updateSavingsProgress = (goal_id) => {
+    const updatedGoal = {
+      amount_saved: amountSaved,
+    };
+
+    patchGoal(goal_id, updatedGoal).then((updatedGoalData) => {
+      setSavingsGoals(savingsGoals.map((goal) =>
+        goal.goal_id === goal_id ? { ...goal, amount_saved: updatedGoalData.amount_saved } : goal
+      ));
+      setAmountSaved("");
+    }).catch((err) => {
+      console.log("Failed to update goal", err.message);
+    });
   };
 
   const deleteGoal = (goal_id) => {
@@ -99,9 +127,19 @@ useEffect(() => {
           <View style={styles.card}>
                 <Text style={styles.cardText}>{item.name}</Text>{" "}
                 <Text style={styles.cardText}>Target: £{item.target_amount}</Text>{" "}
+                <Text style={styles.cardText}>Saved: £{item.amount_saved}</Text>{" "}
+                <TextInput
+                  placeholder="Amount Saved"
+                  placeholderTextColor="white"
+                  style={styles.input}
+                  value={amountSaved}
+                  onChangeText={setAmountSaved}
+                  keyboardType="numeric"
+                />
+                <Button title="Update Savings" onPress={() => updateSavingsProgress(item.goal_id)} />
                 <Button title="Delete" onPress={() => deleteGoal(item.goal_id)} />
                   {error.goalId && error.goalId === item.goal_id && (<Text>{error.msg}</Text>)}
-                <ProgressBar progress={item.amount_saved} color="blue"/>
+                <ProgressBar progress={item.target_amount ? item.amount_saved / item.target_amount : 0} color="blue"/>
                 </View>
         )}
       />
