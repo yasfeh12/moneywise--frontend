@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Essential from "../budgetPages/Essential";
+import NonEssential from "../budgetPages/NonEssential";
+import RecurringTransactions from "../budgetPages/RecurringTransactions";
 import {
   View,
   Text,
@@ -6,52 +9,169 @@ import {
   Button,
   StyleSheet,
   Switch,
+  TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { ProgressBar } from "react-native-paper";
+import axios from "axios";
+
+const api = axios.create({baseURL: "http://localhost:9090/api", timeout: 1000 })
+
+// const interface ICategory {
+//   category_id: number,
+//   name: string,
+//   description: string,
+// }
+
 
 const BudgetScreen: React.FC = () => {
   const [expense, setExpense] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const [category, setCategory] = useState<string>("Food");
   const [isEssential, setIsEssential] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0.4);
+  const [recurringTransaction, setRecurringTransaction] = useState<boolean>(false)
+  const [isCredit, setIsCredit] = useState<boolean>(false);
+  const [essentialPageVisible, setEssentialPageVisible] = useState<boolean>(false);
+  const [transactionsPageVisible, setTransactionsPageVisible] = useState<boolean>(false);
+  const [nonEssentialPageVisible, setNonEssentialPageVisible] = useState<boolean>(false);
+  const [budgetData, setBudgetaData] = useState<object>({});
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [categories, setCategories] = useState([]);
+  const [submitCounter, setSubmitCounter] = useState(0)
 
-  const categories: string[] = [
-    "Food",
-    "Clothes",
-    "Childcare",
-    "Animal Care",
-    "Transportation",
-    "Entertainment",
-    "Health",
-    "Utilities",
-    "Housing",
-    "Groceries",
-    "Other",
-  ];
+  const getBudget = () => {
+    return api.get("/budget").then((response) => {
+        return response.data
+    })
+  }
+
+  const getCategories = () => {
+    return api.get("/categories").then((response) => {
+        return response.data
+    })
+  }
+
+  
+     const postTransaction = (newTransaction) => {
+    return api.post(`/ledger`, newTransaction).then((response)=>{
+        return response.data
+    })
+  }
+
+      const postRecurringTransaction = (newTransaction) => {
+    return api.post(`/recurring_transactions`, newTransaction).then((response)=>{
+        return response.data
+    })
+  }
+
+//need to create in backend
+  //   const deleteRecurring = (transaction_id) => {
+  //   return api.delete(`/recurring_transactions/${transaction_id}`, transaction_id).then(()=>{
+  //       console.log("item removed")
+  //   })
+  // }
+
+  useEffect(()=> {
+    setIsLoading(true)
+    Promise.all([getBudget(), getCategories()])
+    .then(([budget, categories])=> {
+      setIsLoading(false)
+      setCategories(categories.categories)
+      setBudgetaData(budget)
+    }).catch(() => {
+
+    })
+  },[submitCounter])
+
+  const resetInputState = () => {
+    setSubmitCounter(submitCounter + 1)
+    setName("")
+    setExpense("");
+    setCategory("select");
+    setIsEssential(false);
+    setRecurringTransaction(false);
+    setIsCredit(false)
+  } 
 
   const handleAddExpense = () => {
-    console.log({
-      expense,
-      category,
-      isEssential: isEssential ? "Essential" : "Non-Essential",
-    });
-    setExpense("");
-    setCategory("Food");
-    setIsEssential(false);
+
+    const newTransaction = {
+      name,
+      amount: expense,
+      essential: isEssential,
+      is_credit: isCredit,
+     category_id: category
+
+    }
+    if (recurringTransaction) {
+      console.log("here")
+      postRecurringTransaction(newTransaction).then(()=> {
+        resetInputState()
+      })
+    } else {
+      postTransaction(newTransaction).then(()=> {
+        resetInputState()
+      })
+    }
   };
 
+if (isLoading) {
   return (
+    <View>
+      <Text>Loading</Text>
+    </View>
+  )
+}
+
+const essentialTotal = budgetData.transactions.essential.reduce((acc, transaction)=> {
+  acc += +transaction.amount
+return acc
+},0);
+
+const nonEssentialTotal = budgetData.transactions.nonEssential.reduce((acc, transaction)=> {
+  acc += +transaction.amount
+return acc
+},0)
+
+const transactionsTotal = budgetData.recurringTransactions.reduce((acc, transaction)=> {
+ if (!transaction.is_credit) {
+   acc += +transaction.amount
+ }
+return acc
+},0)
+
+const totalExpenses = essentialTotal + nonEssentialTotal
+
+  return (
+    <>
+    <ScrollView>
     <View style={styles.container}>
-      <Text style={styles.title}>Budget</Text>
+      <Text style={styles.title}>Total Expenses £{totalExpenses}</Text>
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Essential Expenses</Text>
-        <ProgressBar progress={progress} color="#80FF00" />
+        <Text style={styles.cardTitle}>Essential Expenses total £{essentialTotal}</Text>
+        <Button title="view transactions" onPress={()=>{setEssentialPageVisible(true)}} />
+        {/* <ProgressBar progress={progress} color="#80FF00" /> */}
       </View>
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Non-Essential Expenses</Text>
-        <ProgressBar progress={progress} color="orange" />
+        <Text style={styles.cardTitle}>Non-Essential Expense total £{nonEssentialTotal}</Text>
+        <Button title="View transactions" onPress={()=>{setNonEssentialPageVisible(true)}} />
+        {/* <ProgressBar style={styles.bar} progress={progress} color="orange" /> */}
       </View>
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Recurring Expenses total £{transactionsTotal}</Text>
+        <Button title="View transactions" onPress={()=>{setTransactionsPageVisible(true)}} />
+        {/* <ProgressBar progress={progress} color="orange" /> */}
+      </View>
+      <View style={styles.card}>
+      <TextInput
+        placeholder="Enter name"
+        placeholderTextColor="white"
+        style={styles.input}
+        value={name}
+        onChangeText={setName}
+      />
       <TextInput
         placeholder="Enter price £££"
         placeholderTextColor="white"
@@ -61,16 +181,16 @@ const BudgetScreen: React.FC = () => {
         onChangeText={setExpense}
       />
       <Picker
-        selectedValue={category}
+        selectedValue={category.name}
         style={styles.picker}
         onValueChange={(itemValue) => setCategory(itemValue)}
       >
         {categories.map((category) => (
-          <Picker.Item key={category} label={category} value={category} />
+          <Picker.Item key={category.category_id} label={category.name} value={category.category_id} />
         ))}
       </Picker>
       <View style={styles.switchContainer}>
-        <Text style={styles.switchLabel}>Essential Expense</Text>
+        <Text style={styles.switchLabel}>Essential Expense {}</Text>
         <Switch
           value={isEssential}
           onValueChange={setIsEssential}
@@ -78,12 +198,40 @@ const BudgetScreen: React.FC = () => {
           thumbColor={isEssential ? "#80FF00" : "#f4f3f4"}
         />
       </View>
-      <Button title="Add Expense" onPress={handleAddExpense} color="#80FF00" />
+      <View style={styles.switchContainer}>
+        <Text style={styles.switchLabel}>Recurring Transaction</Text>
+        <Switch
+          value={recurringTransaction}
+          onValueChange={setRecurringTransaction}
+          trackColor={{ false: "#767577", true: "#80FF00" }}
+          thumbColor={recurringTransaction ? "#80FF00" : "#f4f3f4"}
+        />
+      </View>
+      <View style={styles.switchContainer}>
+        <Text style={styles.switchLabel}>Credit ?</Text>
+        <Switch
+          value={isCredit}
+          onValueChange={setIsCredit}
+          trackColor={{ false: "#767577", true: "#80FF00" }}
+          thumbColor={isEssential ? "#80FF00" : "#f4f3f4"}
+        />
+      </View>
+      <Button title="Add Expense" onPress={handleAddExpense}  />
     </View>
+    <Essential essentialPageVisible={essentialPageVisible} setEssentialPageVisible={setEssentialPageVisible} essentialTransactions={budgetData.transactions.essential}/>
+    <NonEssential nonEssentialPageVisible={nonEssentialPageVisible} setNonEssentialPageVisible={setNonEssentialPageVisible} nonEssentialTransactions={budgetData.transactions.nonEssential}/>
+    <RecurringTransactions transactionsPageVisible={transactionsPageVisible} setTransactionsPageVisible={setTransactionsPageVisible} transactions={budgetData.recurringTransactions}/>
+    </View>
+    </ScrollView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
+  bar:{
+    margin: 0,
+    padding: 0
+  },
   container: {
     flex: 1,
     padding: 20,
