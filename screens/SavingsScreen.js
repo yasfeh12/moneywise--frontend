@@ -11,7 +11,7 @@ import {
 import { ProgressBar } from "react-native-paper";
 //import { TouchableOpacity } from "react-native";
 
-const api = axios.create({baseURL: "http://localhost:9090/api", timeout: 5000 })
+const api = axios.create({baseURL: "http://localhost:9090/api", timeout: 1000 })
 
 const SavingsScreen = () => {
   const [goalName, setGoalName] = useState("");
@@ -54,45 +54,53 @@ useEffect(() => {
     });
 }, []);
 
-  const addSavingsGoal = () => {
-    if (goalName && targetAmount) {
-      const newGoal = {
-        name: goalName,
-        target_amount: targetAmount,
-        amount_saved: 0,
-      };
-      postGoal(newGoal).then((newGoal) => {
-        setSavingsGoals([...savingsGoals, newGoal]);
+const addSavingsGoal = () => {
+  if (goalName && targetAmount) {
+    const newGoal = {
+      name: goalName,
+      target_amount: targetAmount,
+      amount_saved: 0,
+    };
+    postGoal(newGoal)
+      .then(() => {
+        return getGoals();
+      })
+      .then(({goals}) => {
+        setSavingsGoals(goals);
         setGoalName("");
         setTargetAmount("");
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log("failed to add a goal", err.message);
-
       });
-    }
-  };
+  }
+};
+
 
   const updateSavingsProgress = (goal_id) => {
-    //const updatedGoal = {
-      //amount_saved: parseInt(amountSaved),
-    //};
     const savedAmount = parseFloat(amountSaved[goal_id]) || 0;
-    if (savedAmount <= 0) {
-      const updatedGoal = { amount_saved: amountSaved};
-      patchGoal(goal_id, updatedGoal).then((updatedGoalData) => {
-        setSavingsGoals(savingsGoals.map((goal) =>
-          goal.goal_id === goal_id ? { ...goal, amount_saved: updatedGoalData.amount_saved } : goal
-        ));
-        setAmountSaved({ ...amountSaved, [goal_id]: "" });
-      }).catch((err) => {
-        console.log("Failed to update goal", err.message);
-      });
-    }
-    else {
-      setError({msg: "Amount saved must be a positive number that is greater than 0", goalId: goal_id})
-    }
 
+    if (savedAmount > 0) {
+      const goalToUpdate = savingsGoals.find(goal => goal.goal_id === goal_id);
+      const updatedGoal = { amount_saved: goalToUpdate.amount_saved + savedAmount };
+
+      patchGoal(goal_id, updatedGoal)
+        .then((updatedGoalData) => {
+          setSavingsGoals(savingsGoals.map((goal) =>
+            goal.goal_id === goal_id
+              ? { ...goal, amount_saved: updatedGoalData.amount_saved }
+              : goal
+          ));
+          setAmountSaved({ ...amountSaved, [goal_id]: "" });
+        })
+        .catch((err) => {
+          console.log("Failed to update goal", err.message);
+        });
+    } else {
+      setError({ msg: "Amount saved must be a positive number greater than 0", goalId: goal_id });
+    }
   };
+
 
   const handleAmountSavedChange = (goal_id, value) => {
     setAmountSaved({ ...amountSaved, [goal_id]: value });
