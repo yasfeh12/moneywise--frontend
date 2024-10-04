@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { View, Text, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { PieChart, BarChart } from "react-native-gifted-charts";
 import { LineChart } from "react-native-chart-kit";
-import { StringLiteral } from "typescript";
 import axios from "axios";
+import ToggleTheme from "../components/ToggleTheme";
 
-// Creating a custom axios instance
 const apiClient = axios.create({
   baseURL: "http://localhost:9090",
   timeout: 1000,
@@ -75,7 +74,8 @@ const ReportScreen: React.FC = (): JSX.Element => {
   const [actualPieChartData, setActualPieChartData] = useState<
     PieSpentvsSavingsData[] | undefined
   >(undefined);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     let endpoint = "/api/overview";
     apiClient
@@ -106,6 +106,8 @@ const ReportScreen: React.FC = (): JSX.Element => {
         <Text style={styles.title}>Monthly Financial Report 1</Text>
       </View>
 
+      <Text style={styles.title}>Monthly Financial Report 1</Text>
+
       <View style={styles.chartContainer}>
         <Text style={styles.title}>Pie Chart - Amount Saved</Text>
         {loading ? (
@@ -120,7 +122,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
             textColor={"#FFFFFF"}
             textSize={18}
             innerCircleColor="#000F0C" // matches background color in stylesheet below
-            strokeWidth={6} // Add this to create the overlap effect
+            strokeWidth={6} // Add this to create the overlap gap
             strokeColor={"#000F0C"}
           />
         ) : (
