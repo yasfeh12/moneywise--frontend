@@ -2,14 +2,10 @@ import React, { useEffect, useState, useContext } from "react";
 import { View, Text, StyleSheet, Dimensions, ScrollView } from "react-native";
 import { PieChart, BarChart } from "react-native-gifted-charts";
 import { LineChart } from "react-native-chart-kit";
-import axios from "axios";
+
 import ToggleTheme from "../components/ToggleTheme";
 import { ThemeContext } from "../utils/ThemeContext";
-
-const apiClient = axios.create({
-  baseURL: "http://localhost:9090",
-  timeout: 1000,
-});
+import apiClient from "../utils/API";
 
 interface PieSpentvsSavingsData {
   value: number;
@@ -85,7 +81,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
   >(undefined);
 
   const [loading, setLoading] = useState<boolean>(true);
-  const { theme, setTheme } = useContext(ThemeContext); // setTheme not used
+  const { theme, setTheme } = useContext(ThemeContext); // "setTheme" not used for now
 
   const buttonThemeHelper = () => {
     return [
@@ -101,7 +97,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
   // };
 
   useEffect(() => {
-    let endpoint = "/api/reports/september";
+    let endpoint = "/reports/september";
     apiClient
       .get(endpoint)
       .then((response) => {
