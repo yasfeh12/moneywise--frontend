@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {
   View,
   Text,
@@ -8,26 +9,122 @@ import {
   FlatList,
 } from "react-native";
 import { ProgressBar } from "react-native-paper";
+//import { TouchableOpacity } from "react-native";
+
+const api = axios.create({baseURL: "http://localhost:9090/api", timeout: 1000 })
 
 const SavingsScreen = () => {
   const [goalName, setGoalName] = useState("");
   const [targetAmount, setTargetAmount] = useState("");
   const [savingsGoals, setSavingsGoals] = useState([]);
+  const [error, setError] = useState({msg: "", goalId: null});
+  const [amountSaved, setAmountSaved] = useState({});
 
-  const addSavingsGoal = () => {
-    if (goalName && targetAmount) {
-      setSavingsGoals([
-        ...savingsGoals,
-        { id: Date.now(), name: goalName, target: targetAmount, progress: 0 },
-      ]);
-      setGoalName("");
-      setTargetAmount("");
-    }
+  const getGoals = () => {
+  return api.get("/goals").then((response) => {
+      return response.data
+  })
+}
+
+  const postGoal = (newGoal) => {
+  return api.post("/goals", newGoal).then((response) => {
+      return response.data
+  })
+}
+  const patchGoal = (goal_id, updatedGoal) => {
+  return api.patch(`/goals/${goal_id}`, updatedGoal).then((response) => {
+      return response.data
+  })
+}
+
+  const deletingGoal = (goal_id) => {
+  return api.delete(`/goals/${goal_id}`, goal_id).then(()=>{
+      console.log("item removed")
+  })
+}
+
+useEffect(() => {
+  getGoals()
+    .then(({goals}) => {
+      console.log(goals)
+      setSavingsGoals(goals)
+    })
+    .catch((err) => {
+      console.log(err)
+    });
+}, []);
+
+const addSavingsGoal = () => {
+  if (goalName && targetAmount) {
+    const newGoal = {
+      name: goalName,
+      target_amount: targetAmount,
+      amount_saved: 0,
+    };
+    postGoal(newGoal)
+      .then(() => {
+        return getGoals();
+      })
+      .then(({goals}) => {
+        setSavingsGoals(goals);
+        setGoalName("");
+        setTargetAmount("");
+      })
+      .catch((err) => {
+        console.log("failed to add a goal", err.message);
+      });
+  }
+};
+
+
+const updateSavingsProgress = (goal_id) => {
+  const savedAmount = parseFloat(amountSaved[goal_id]) || 0;
+
+  const goalToUpdate = savingsGoals.find(goal => goal.goal_id === goal_id);
+  const newSavedAmount = parseFloat(goalToUpdate.amount_saved) + savedAmount;
+
+  if (newSavedAmount > goalToUpdate.target_amount) {
+    setError({ msg: "Amount saved exceeds target", goalId: goal_id });
+    return;
+  }
+
+  if (savedAmount > 0) {
+    const updatedGoal = { amount_saved: newSavedAmount };
+
+    patchGoal(goal_id, updatedGoal)
+      .then((updatedGoalData) => {
+        setSavingsGoals(savingsGoals.map((goal) =>
+          goal.goal_id === goal_id
+            ? { ...goal, amount_saved: updatedGoalData.amount_saved }
+            : goal
+        ));
+        setAmountSaved({ ...amountSaved, [goal_id]: "" });
+      })
+      .catch((err) => {
+        console.log("Failed to update goal", err.message);
+      });
+  } else {
+    setError({ msg: "Amount saved must be a positive number greater than 0", goalId: goal_id });
+  }
+};
+
+
+
+  const handleAmountSavedChange = (goal_id, value) => {
+    setAmountSaved({ ...amountSaved, [goal_id]: value });
   };
 
-  const deleteGoal = (id) => {
-    setSavingsGoals(savingsGoals.filter((goal) => goal.id !== id));
+  const deleteGoal = (goal_id) => {
+    deletingGoal(goal_id).then(()=>{
+      setError({msg: "", goalId: null})
+      setSavingsGoals(savingsGoals.filter((goal) => goal.goal_id !== goal_id));
+
+    }).catch(()=> {
+      console.log("in catch")
+      setError({msg: "failed to delete", goalId: goal_id})
+    })
   };
+
 
   return (
     <View style={styles.container}>
@@ -52,14 +149,26 @@ const SavingsScreen = () => {
 
       <FlatList
         data={savingsGoals}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.goal_id.toString()}
         renderItem={({ item }) => (
           <View style={styles.card}>
-            <Text style={styles.cardText}>{item.name}</Text>{" "}
-            <Text style={styles.cardText}>Target: £{item.target}</Text>{" "}
-            <ProgressBar progress={item.progress} color="blue" />
-            <Button title="Delete" onPress={() => deleteGoal(item.id)} />
-          </View>
+                <Text style={styles.cardText}>{item.name}</Text>{" "}
+                <Text style={styles.cardText}>Target: £{item.target_amount}</Text>{" "}
+                <Text style={styles.cardText}>Saved: £{item.amount_saved}</Text>{" "}
+                <TextInput
+                  placeholder="Amount Saved"
+                  placeholderTextColor="white"
+                  style={styles.input}
+                  value={amountSaved[item.goal_id] || ""}
+                  onChangeText={(value) => handleAmountSavedChange(item.goal_id, value)}
+                  keyboardType="numeric"
+                />
+                <Button title="Update" onPress={() => updateSavingsProgress(item.goal_id)} />
+                <Button title="Delete" onPress={() => deleteGoal(item.goal_id)} />
+                  {error.goalId && error.goalId === item.goal_id && (<Text>{error.msg}</Text>)}
+                <ProgressBar progress={item.target_amount ? item.amount_saved / item.target_amount : 0} color="blue"/>
+                <Text style={styles.cardText}>Progress: {item.target_amount ? ((item.amount_saved / item.target_amount) * 100).toFixed(2) : 0}%</Text>
+                </View>
         )}
       />
     </View>
@@ -103,6 +212,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 10,
   },
+  progress: {
+    marginBottom: 0,
+    padding: 0,
+  }
 });
 
 export default SavingsScreen;
