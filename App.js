@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -10,6 +10,7 @@ import SavingsScreen from "./screens/SavingsScreen";
 import StockScreen from "./screens/StockScreen";
 import UserProfileScreen from "./screens/UserProfileScreen";
 import { Ionicons } from "react-native-vector-icons";
+import { ThemeProvider } from "./utils/ThemeContext";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -110,18 +111,20 @@ function MainTabs({ navigation }) {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Moneywise" component={UserProfileScreen} />
-        <Stack.Screen
-          name="Main"
-          component={MainTabs}
-          options={{
-            headerShown: false,
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <ThemeProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login">
+          <Stack.Screen name="Moneywise" component={UserProfileScreen} />
+          <Stack.Screen
+            name="Main"
+            component={MainTabs}
+            options={{
+              headerShown: false,
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </ThemeProvider>
   );
 }
 
