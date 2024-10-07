@@ -23,7 +23,7 @@ const ToggleTheme = () => {
     <View style={styles.switchContainer}>
       <Text style={styles.switchLabel}>{theme} mode </Text>
       <Switch
-        value={theme === "dark " ? true : false}
+        value={theme === "dark" ? true : false}
         onValueChange={toggleThemeHelper}
         trackColor={{ false: "#767577", true: "#80FF00" }}
         thumbColor={theme === "light" ? "#80FF00" : "#f4f3f4"}
