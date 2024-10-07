@@ -37,7 +37,8 @@ const SavingsScreen = () => {
   };
   const patchGoal = (goal_id, updatedGoal) => {
     return api.patch(`/goals/${goal_id}`, updatedGoal).then((response) => {
-      return response.data;
+      console.log("API response", response.data);
+      return response.data.updatedGoal;
     });
   };
 
@@ -82,11 +83,32 @@ const SavingsScreen = () => {
 
   const updateSavingsProgress = (goal_id) => {
     const savedAmount = parseFloat(amountSaved[goal_id]) || 0;
+    console.log(`Amount saved input for goal ${goal_id}:`, savedAmount);
 
     const goalToUpdate = savingsGoals.find((goal) => goal.goal_id === goal_id);
-    const newSavedAmount = parseFloat(goalToUpdate.amount_saved) + savedAmount;
+    if (!goalToUpdate) {
+      console.log(`Goal with ID ${goal_id} not found.`);
+      setError({ msg: "Goal not found", goalId: goal_id });
+      return;
+    }
 
-    if (newSavedAmount > goalToUpdate.target_amount) {
+    const currentSaved = goalToUpdate.amount_saved
+      ? parseFloat(goalToUpdate.amount_saved)
+      : 0; // Handle null as 0
+    const target = parseFloat(goalToUpdate.target_amount) || 0;
+
+    console.log(
+      `Current goal info for goal ${goal_id} - Target: ${target}, Saved: ${currentSaved}`
+    );
+
+    const newSavedAmount = currentSaved + savedAmount;
+
+    console.log(`New saved amount for goal ${goal_id}:`, newSavedAmount);
+
+    if (newSavedAmount > target) {
+      console.log(
+        `New saved amount (${newSavedAmount}) exceeds target (${target}).`
+      );
       setError({ msg: "Amount saved exceeds target", goalId: goal_id });
       return;
     }
@@ -96,19 +118,28 @@ const SavingsScreen = () => {
 
       patchGoal(goal_id, updatedGoal)
         .then((updatedGoalData) => {
+          const updatedSavedAmount = updatedGoalData.amount_saved
+            ? parseFloat(updatedGoalData.amount_saved)
+            : newSavedAmount;
+          console.log(
+            `Goal updated successfully for goal ${goal_id}. New amount saved: ${updatedSavedAmount}`
+          );
+
           setSavingsGoals(
             savingsGoals.map((goal) =>
               goal.goal_id === goal_id
-                ? { ...goal, amount_saved: updatedGoalData.amount_saved }
+                ? { ...goal, amount_saved: updatedSavedAmount }
                 : goal
             )
           );
+
           setAmountSaved({ ...amountSaved, [goal_id]: "" });
         })
         .catch((err) => {
-          console.log("Failed to update goal", err.message);
+          console.log("Failed to update goal:", err.message);
         });
     } else {
+      console.log("Invalid saved amount. Must be greater than 0.");
       setError({
         msg: "Amount saved must be a positive number greater than 0",
         goalId: goal_id,
