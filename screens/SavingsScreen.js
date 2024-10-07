@@ -187,7 +187,6 @@ const updateSavingsProgress = (goal_id) => {
                 <Button title="Delete" onPress={() => deleteGoal(item.goal_id)} />
                   {error.goalId && error.goalId === item.goal_id && (<Text>{error.msg}</Text>)}
                 <ProgressBar progress={item.target_amount ? item.amount_saved / item.target_amount : 0} color="blue"/>
-                <Text style={styles.cardText}>Progress: {item.target_amount ? ((item.amount_saved / item.target_amount) * 100).toFixed(2) : 0}%</Text>
                 </View>
         )}
       />
