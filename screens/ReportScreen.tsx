@@ -7,7 +7,7 @@ import ToggleTheme from "../components/ToggleTheme";
 import { ThemeContext } from "../utils/ThemeContext";
 
 const apiClient = axios.create({
-  baseURL: "https://localhost:8080",
+  baseURL: "http://localhost:9090",
   timeout: 1000,
 });
 
@@ -17,11 +17,11 @@ interface PieSpentvsSavingsData {
   text: string;
 }
 
-// now dynamically loaded, could maybe get rid of this
-const pieSpentvsSavingsData: PieSpentvsSavingsData[] = [
-  { value: 60, color: "#2979FF", text: "spent" }, // 60% spent
-  { value: 40, color: "#00E5FF", text: "saved" }, // 40% saved
-];
+// // now dynamically loaded, could maybe get rid of this
+// const pieSpentvsSavingsData: PieSpentvsSavingsData[] = [
+//   { value: 60, color: "#2979FF", text: "spent" }, // 60% spent
+//   { value: 40, color: "#00E5FF", text: "saved" }, // 40% saved
+// ];
 interface BarCategoriesData {
   value: number;
   label: string;
@@ -74,9 +74,18 @@ const screenWidth = Dimensions.get("window").width; // get width of screen
 const ReportScreen: React.FC = (): JSX.Element => {
   const [actualPieChartData, setActualPieChartData] = useState<
     PieSpentvsSavingsData[] | undefined
+  >(undefined); // data for saved/spent pie chart
+  const [actualEssentialPieChartData, setActualEssentialPieChartData] =
+    useState<PieSpentvsSavingsData[] | undefined>(undefined); // data for essential/non-essential pie chart
+  const [actualBarChartData, setActualBarChartData] = useState<
+    BarCategoriesData[] | undefined
   >(undefined);
+  const [actualLineGraphData, setActualLineGraphData] = useState<
+    BalanceOverTimeDataLineGraph | undefined
+  >(undefined);
+
   const [loading, setLoading] = useState<boolean>(true);
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme, setTheme } = useContext(ThemeContext); //set theme not used
 
   const buttonThemeHelper = () => {
     return [
@@ -86,22 +95,109 @@ const ReportScreen: React.FC = (): JSX.Element => {
   };
 
   useEffect(() => {
-    let endpoint = "/api/overview";
+    let endpoint = "/api/reports/september";
     apiClient
       .get(endpoint)
       .then((response) => {
-        //        console.log("response", response.data.overview);
-        const income = response.data.overview.income;
-        const savedRemainingBalance = response.data.overview.remainingBalance;
-        const spent = income - savedRemainingBalance;
+        console.log("response", response.data.reports.spentVsSaved);
+        console.log("response temp");
+        const saved = response.data.reports.spentVsSaved.saved;
+        const spent = response.data.reports.spentVsSaved.spending;
         setActualPieChartData([
-          { value: spent, color: "#2979FF", text: `${spent.toString()} spent` }, // 60% spent
+          { value: spent, color: "#2979FF", text: `${spent.toString()} spent` }, // % spent
           {
-            value: savedRemainingBalance,
+            value: saved,
             color: "#00E5FF",
-            text: `${savedRemainingBalance.toString()} saved`,
-          }, // 40% saved
+            text: `${saved.toString()} saved`,
+          }, // % saved
         ]);
+
+        const essential =
+          response.data.reports.essentialVsNonEssential.essential;
+        const nonEssential =
+          response.data.reports.essentialVsNonEssential.nonEssential;
+        setActualEssentialPieChartData([
+          {
+            value: essential,
+            color: "#2979FF",
+            text: `${essential.toString()} essential`,
+          },
+          {
+            value: nonEssential,
+            color: "#00E5FF",
+            text: `${nonEssential.toString()} nonEssential`,
+          },
+        ]);
+
+        const { spendingByCategory } = response.data.reports;
+
+        const colourForBarChart: { [key: string]: string } = {
+          utilities: "#2979FF",
+          food: "#00E5FF",
+          entertainment: "#FF4081",
+          transportation: "#FFCA28",
+          housing: "#4CAF50",
+          other: "#9C27B0",
+          insurance: "#FF5722",
+          health: "#8BC34A",
+          childcare: "#3F51B5",
+          clothing: "#CDDC39",
+          groceries: "#FF9800",
+          "animal care": "#607D8B",
+        };
+        const barChartData: BarCategoriesData[] = Object.entries(
+          spendingByCategory
+        ).map(([key, value]: [string, number]) => {
+          return {
+            value: value,
+            label: key,
+            frontColor: colourForBarChart[key],
+          };
+        });
+
+        setActualBarChartData(barChartData);
+        // setActualBarChartData(
+        //   [
+        //   {
+        //     value: spendingByCategory["utilities"],
+        //     label: "Utilities",
+        //     frontColor: "#2979FF",
+        //   },
+        //   { value: 200, label: "Food", frontColor: "#00E5FF" },
+        //   { value: 100, label: "Entertainment", frontColor: "#FF4081" },
+        //   { value: 80, label: "Transportation", frontColor: "#FFCA28" },
+        //   { value: 700, label: "Housing", frontColor: "#4CAF50" },
+        //   { value: 50, label: "Other", frontColor: "#9C27B0" },
+        //   { value: 120, label: "Insurance", frontColor: "#FF5722" },
+        //   { value: 90, label: "Health", frontColor: "#8BC34A" },
+        //   { value: 70, label: "Childcare", frontColor: "#3F51B5" },
+        //   { value: 60, label: "Clothing", frontColor: "#CDDC39" },
+        //   { value: 130, label: "Groceries", frontColor: "#FF9800" },
+        //   { value: 40, label: "Animal Care", frontColor: "#607D8B" },
+        // ]);
+
+        const varLabels = Object.keys(response.data.reports.dailyBalances);
+        const varDatasets = Object.values(
+          response.data.reports.dailyBalances
+        ).map((dataSetItem: any) => {
+          // edit ANY, amd put specific type
+          return dataSetItem.balance;
+        });
+
+        const balanceOverTimeData2: BalanceOverTimeDataLineGraph = {
+          labels: varLabels,
+          datasets: [
+            {
+              data: varDatasets,
+              color: () => "#80FF00", // line of chart, colour
+              strokeWidth: 2, //thickness of line
+            },
+          ],
+          legend: ["Balance Over Time"],
+        };
+
+        setActualLineGraphData(balanceOverTimeData2);
+
         setLoading(false);
       })
       .catch((error) => {
@@ -123,7 +219,28 @@ const ReportScreen: React.FC = (): JSX.Element => {
           <Text style={{ color: "white", fontSize: 20 }}>Loading...</Text>
         ) : actualPieChartData ? (
           <PieChart
-            data={actualPieChartData}
+            data={actualPieChartData || []} // when undefined, array
+            donut
+            showText={true}
+            radius={120}
+            innerRadius={50}
+            textColor={"#FFFFFF"}
+            textSize={18}
+            innerCircleColor="#000F0C" // matches background color in stylesheet below
+            strokeWidth={6} // Add this to create the overlap gap
+            strokeColor={"#000F0C"}
+          />
+        ) : (
+          <Text>No data found...</Text>
+        )}
+      </View>
+      <View style={styles.chartContainer}>
+        <Text style={styles.title}>Pie Chart - Essential vs Non-Essential</Text>
+        {loading ? (
+          <Text style={{ color: "white", fontSize: 20 }}>Loading...</Text>
+        ) : actualPieChartData ? (
+          <PieChart
+            data={actualEssentialPieChartData || []} // when undefined, array
             donut
             showText={true}
             radius={120}
@@ -144,7 +261,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
           <Text style={{ color: "white", fontSize: 20 }}>Loading...</Text>
         ) : (
           <BarChart
-            data={barCategoriesData}
+            data={actualBarChartData || []}
             barWidth={30}
             barBorderRadius={5}
             // height={300} // works without eight
@@ -168,7 +285,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
           <Text style={{ color: "white", fontSize: 20 }}>Loading...</Text>
         ) : (
           <LineChart
-            data={balanceOverTimeData}
+            data={actualLineGraphData} // NEED TO FIX TYPESCRIPT ERROR!!!!!!!!!!!!
             width={screenWidth - 40}
             height={220}
             chartConfig={{
@@ -195,7 +312,10 @@ const ReportScreen: React.FC = (): JSX.Element => {
           />
         )}
       </View>
-      <ToggleTheme />
+      {/* Footer. switch light mode to dark mode */}
+      <View style={styles.container}>
+        <ToggleTheme />
+      </View>
     </ScrollView>
   );
 };
@@ -223,9 +343,11 @@ const styles = StyleSheet.create({
   },
   lightTheme: {
     backgroundColor: "#333333",
+    color: "#FFFFFF", // not sure why, but it is not applied
   },
   darkTheme: {
     backgroundColor: "#FFFFFF",
+    color: "#000000", // not sure why, but it is not applied
   },
 });
 
