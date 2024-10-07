@@ -7,7 +7,7 @@ import ToggleTheme from "../components/ToggleTheme";
 import { ThemeContext } from "../utils/ThemeContext";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:9090",
+  baseURL: "http://localhost:9090/api",
   timeout: 1000,
 });
 
@@ -101,7 +101,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
   // };
 
   useEffect(() => {
-    let endpoint = "/api/reports/september";
+    let endpoint = "/reports/september";
     apiClient
       .get(endpoint)
       .then((response) => {
