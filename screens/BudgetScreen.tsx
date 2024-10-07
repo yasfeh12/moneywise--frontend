@@ -245,7 +245,7 @@ const BudgetScreen: React.FC = () => {
             <Button
               title="Add Expense"
               onPress={handleAddExpense}
-              color="white"
+              color="#00C293"
             />
           </View>
           <Essential
@@ -270,52 +270,54 @@ const BudgetScreen: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
-  bar: {
-    margin: 0,
-    padding: 0,
-  },
   container: {
     flex: 1,
     padding: 20,
     backgroundColor: "#00C293",
   },
   title: {
-    fontSize: 24,
-    marginBottom: 20,
-    color: "#636363",
+    fontSize: 26,
     fontWeight: "bold",
+    color: "white",
+    textAlign: "center",
+    marginBottom: 30,
   },
   card: {
     padding: 20,
     backgroundColor: "#636363",
+    borderRadius: 15,
     marginBottom: 20,
-    borderRadius: 10,
-    borderColor: "white",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 5,
+    borderColor: "#fff",
     borderWidth: 2,
   },
   cardTitle: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: 600,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#00C293",
+    marginBottom: 10,
+    textAlign: "center",
   },
   input: {
-    height: 40,
-    borderColor: "white",
+    height: 50,
+    borderColor: "#ddd",
     borderWidth: 1,
-    borderTopRightRadius: 20,
-    paddingHorizontal: 10,
-    marginBottom: 20,
+    borderRadius: 12,
+    paddingHorizontal: 15,
+    backgroundColor: "#535353",
     color: "white",
-    backgroundColor: "#636363",
+    marginBottom: 20,
   },
   picker: {
     height: 50,
+    backgroundColor: "#535353",
+    borderRadius: 12,
     marginBottom: 20,
     color: "white",
-    backgroundColor: "#636363",
   },
   switchContainer: {
     flexDirection: "row",
@@ -324,27 +326,26 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   switchLabel: {
-    color: "white",
     fontSize: 18,
-    fontWeight: 600,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    fontWeight: "600",
+    color: "white",
   },
   button: {
-    marginTop: 25,
-    marginBottom: 0,
-    borderWidth: 2,
-    borderColor: "#00C293",
-    borderRadius: 5,
+    marginTop: 20,
+    backgroundColor: "white",
+    paddingVertical: 15,
+    borderRadius: 50,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 6,
   },
   buttonText: {
-    color: "white",
     fontSize: 18,
-    fontWeight: 600,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    fontWeight: "600",
+    color: "#00C293",
   },
 });
 
