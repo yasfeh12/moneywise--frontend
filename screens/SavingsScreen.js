@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -7,38 +6,41 @@ import {
   Button,
   StyleSheet,
   FlatList,
-} from 'react-native';
-import { ProgressBar } from 'react-native-paper';
+} from "react-native";
+import { ProgressBar } from "react-native-paper";
+import apiClient from "../utils/API";
+import ToggleTheme from "../components/ToggleTheme";
+import { ThemeContext } from "../utils/ThemeContext";
 //import { TouchableOpacity } from "react-native";
-const api = axios.create({
-  baseURL: 'http://localhost:9090/api',
-  timeout: 1000,
-});
+
 const SavingsScreen = () => {
-  const [goalName, setGoalName] = useState('');
-  const [targetAmount, setTargetAmount] = useState('');
+  const [goalName, setGoalName] = useState("");
+  const [targetAmount, setTargetAmount] = useState("");
   const [savingsGoals, setSavingsGoals] = useState([]);
-  const [error, setError] = useState({ msg: '', goalId: null });
+  const [error, setError] = useState({ msg: "", goalId: null });
   const [amountSaved, setAmountSaved] = useState({});
+  const { theme, setTheme } = useContext(ThemeContext); // "setTheme" not used for now
   const getGoals = () => {
-    return api.get('/goals').then((response) => {
+    return apiClient.get("/goals").then((response) => {
       return response.data;
     });
   };
   const postGoal = (newGoal) => {
-    return api.post('/goals', newGoal).then((response) => {
+    return apiClient.post("/goals", newGoal).then((response) => {
       return response.data;
     });
   };
   const patchGoal = (goal_id, updatedGoal) => {
-    return api.patch(`/goals/${goal_id}`, updatedGoal).then((response) => {
-      console.log('API response', response.data);
-      return response.data.updatedGoal;
-    });
+    return apiClient
+      .patch(`/goals/${goal_id}`, updatedGoal)
+      .then((response) => {
+        console.log("API response", response.data);
+        return response.data.updatedGoal;
+      });
   };
   const deletingGoal = (goal_id) => {
-    return api.delete(`/goals/${goal_id}`, goal_id).then(() => {
-      console.log('item removed');
+    return apiClient.delete(`/goals/${goal_id}`, goal_id).then(() => {
+      console.log("item removed");
     });
   };
   useEffect(() => {
@@ -64,11 +66,11 @@ const SavingsScreen = () => {
         })
         .then(({ goals }) => {
           setSavingsGoals(goals);
-          setGoalName('');
-          setTargetAmount('');
+          setGoalName("");
+          setTargetAmount("");
         })
         .catch((err) => {
-          console.log('failed to add a goal', err.message);
+          console.log("failed to add a goal", err.message);
         });
     }
   };
@@ -78,7 +80,7 @@ const SavingsScreen = () => {
     const goalToUpdate = savingsGoals.find((goal) => goal.goal_id === goal_id);
     if (!goalToUpdate) {
       console.log(`Goal with ID ${goal_id} not found.`);
-      setError({ msg: 'Goal not found', goalId: goal_id });
+      setError({ msg: "Goal not found", goalId: goal_id });
       return;
     }
     const currentSaved = goalToUpdate.amount_saved
@@ -94,7 +96,7 @@ const SavingsScreen = () => {
       console.log(
         `New saved amount (${newSavedAmount}) exceeds target (${target}).`
       );
-      setError({ msg: 'Amount saved exceeds target', goalId: goal_id });
+      setError({ msg: "Amount saved exceeds target", goalId: goal_id });
       return;
     }
     if (savedAmount > 0) {
@@ -114,15 +116,15 @@ const SavingsScreen = () => {
                 : goal
             )
           );
-          setAmountSaved({ ...amountSaved, [goal_id]: '' });
+          setAmountSaved({ ...amountSaved, [goal_id]: "" });
         })
         .catch((err) => {
-          console.log('Failed to update goal:', err.message);
+          console.log("Failed to update goal:", err.message);
         });
     } else {
-      console.log('Invalid saved amount. Must be greater than 0.');
+      console.log("Invalid saved amount. Must be greater than 0.");
       setError({
-        msg: 'Amount saved must be a positive number greater than 0',
+        msg: "Amount saved must be a positive number greater than 0",
         goalId: goal_id,
       });
     }
@@ -133,112 +135,120 @@ const SavingsScreen = () => {
   const deleteGoal = (goal_id) => {
     deletingGoal(goal_id)
       .then(() => {
-        setError({ msg: '', goalId: null });
+        setError({ msg: "", goalId: null });
         setSavingsGoals(
           savingsGoals.filter((goal) => goal.goal_id !== goal_id)
         );
       })
       .catch(() => {
-        console.log('in catch');
-        setError({ msg: 'failed to delete', goalId: goal_id });
+        console.log("in catch");
+        setError({ msg: "failed to delete", goalId: goal_id });
       });
   };
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Savings Goals</Text>
-      <TextInput
-        placeholder="Goal Name"
-        placeholderTextColor="white"
-        style={styles.input}
-        value={goalName}
-        onChangeText={setGoalName}
-      />
-      <TextInput
-        placeholder="Target Amount"
-        placeholderTextColor="white"
-        style={styles.input}
-        value={targetAmount}
-        onChangeText={setTargetAmount}
-        keyboardType="numeric"
-      />
-      <Button title="Add Goal" onPress={addSavingsGoal} />
-      <FlatList
-        data={savingsGoals}
-        keyExtractor={(item) => item.goal_id.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.cardText}>{item.name}</Text>{' '}
-            <Text style={styles.cardText}>Target: £{item.target_amount}</Text>{' '}
-            <Text style={styles.cardText}>Saved: £{item.amount_saved}</Text>{' '}
-            <TextInput
-              placeholder="Amount Saved"
-              placeholderTextColor="white"
-              style={styles.input}
-              value={amountSaved[item.goal_id] || ''}
-              onChangeText={(value) =>
-                handleAmountSavedChange(item.goal_id, value)
-              }
-              keyboardType="numeric"
-            />
-            <Button
-              title="Update"
-              onPress={() => updateSavingsProgress(item.goal_id)}
-            />
-            <Button title="Delete" onPress={() => deleteGoal(item.goal_id)} />
-            {error.goalId && error.goalId === item.goal_id && (
-              <Text>{error.msg}</Text>
-            )}
-            <ProgressBar
-              progress={
-                item.target_amount ? item.amount_saved / item.target_amount : 0
-              }
-              color="blue"
-            />
-            <Text style={styles.cardText}>
-              Progress:{' '}
-              {item.target_amount
-                ? ((item.amount_saved / item.target_amount) * 100).toFixed(2)
-                : 0}
-              %
-            </Text>
-          </View>
-        )}
-      />
-    </View>
+    <>
+      <View style={styles.container}>
+        <Text style={styles.title}>Savings Goals</Text>
+        <TextInput
+          placeholder="Goal Name"
+          placeholderTextColor="white"
+          style={styles.input}
+          value={goalName}
+          onChangeText={setGoalName}
+        />
+        <TextInput
+          placeholder="Target Amount"
+          placeholderTextColor="white"
+          style={styles.input}
+          value={targetAmount}
+          onChangeText={setTargetAmount}
+          keyboardType="numeric"
+        />
+        <Button title="Add Goal" onPress={addSavingsGoal} />
+        <FlatList
+          data={savingsGoals}
+          keyExtractor={(item) => item.goal_id.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.card}>
+              <Text style={styles.cardText}>{item.name}</Text>{" "}
+              <Text style={styles.cardText}>Target: £{item.target_amount}</Text>{" "}
+              <Text style={styles.cardText}>Saved: £{item.amount_saved}</Text>{" "}
+              <TextInput
+                placeholder="Amount Saved"
+                placeholderTextColor="white"
+                style={styles.input}
+                value={amountSaved[item.goal_id] || ""}
+                onChangeText={(value) =>
+                  handleAmountSavedChange(item.goal_id, value)
+                }
+                keyboardType="numeric"
+              />
+              <Button
+                title="Update"
+                onPress={() => updateSavingsProgress(item.goal_id)}
+              />
+              <Button title="Delete" onPress={() => deleteGoal(item.goal_id)} />
+              {error.goalId && error.goalId === item.goal_id && (
+                <Text>{error.msg}</Text>
+              )}
+              <ProgressBar
+                progress={
+                  item.target_amount
+                    ? item.amount_saved / item.target_amount
+                    : 0
+                }
+                color="blue"
+              />
+              <Text style={styles.cardText}>
+                Progress:{" "}
+                {item.target_amount
+                  ? ((item.amount_saved / item.target_amount) * 100).toFixed(2)
+                  : 0}
+                %
+              </Text>
+            </View>
+          )}
+        />
+      </View>
+      {/* Footer. switch light mode to dark mode */}
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ToggleTheme />
+      </View>
+    </>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#000F0C',
+    backgroundColor: "#000F0C",
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
-    color: '#80FF00',
-    fontWeight: 'bold',
+    color: "#80FF00",
+    fontWeight: "bold",
   },
   input: {
     height: 40,
-    borderColor: '#80FF00',
+    borderColor: "#80FF00",
     borderWidth: 1,
     paddingHorizontal: 10,
     marginBottom: 20,
-    color: '#FFFFFF',
-    backgroundColor: '#000F0C',
+    color: "#FFFFFF",
+    backgroundColor: "#000F0C",
   },
   card: {
     padding: 20,
-    backgroundColor: '#000F0C',
+    backgroundColor: "#000F0C",
     marginBottom: 20,
     borderRadius: 10,
-    borderColor: '#80FF00',
+    borderColor: "#80FF00",
     borderWidth: 2,
   },
   cardText: {
     fontSize: 18,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   addButtonContainer: {
     marginTop: 20,
