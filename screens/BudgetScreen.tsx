@@ -151,48 +151,51 @@ const BudgetScreen: React.FC = () => {
             <Text style={styles.cardTitle}>
               Essential Expenses total £{essentialTotal}
             </Text>
-            <Button
-              color="#80FF00"
-              title="view transactions"
+            <TouchableOpacity
+              style={styles.button}
               onPress={() => {
                 setEssentialPageVisible(true);
               }}
-            />
+            >
+              <Text style={styles.buttonText}>VIEW TRANSACTIONS</Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.card}>
             <Text style={styles.cardTitle}>
-              Non-Essential Expense total £{nonEssentialTotal}
+              Non-Essential Expenses total £{nonEssentialTotal}
             </Text>
-            <Button
-              color="#80FF00"
-              title="View transactions"
+            <TouchableOpacity
+              style={styles.button}
               onPress={() => {
                 setNonEssentialPageVisible(true);
               }}
-            />
+            >
+              <Text style={styles.buttonText}>VIEW TRANSACTIONS</Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.card}>
             <Text style={styles.cardTitle}>
               Recurring Expenses total £{transactionsTotal}
             </Text>
-            <Button
-              color="#80FF00"
-              title="View transactions"
+            <TouchableOpacity
+              style={styles.button}
               onPress={() => {
                 setTransactionsPageVisible(true);
               }}
-            />
+            >
+              <Text style={styles.buttonText}>VIEW TRANSACTIONS</Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.card}>
             <TextInput
-              placeholder="Enter name"
+              placeholder="Enter Expense"
               placeholderTextColor="white"
               style={styles.input}
               value={name}
               onChangeText={setName}
             />
             <TextInput
-              placeholder="Enter price £££"
+              placeholder="Enter Price £££"
               placeholderTextColor="white"
               style={styles.input}
               keyboardType="numeric"
@@ -217,8 +220,8 @@ const BudgetScreen: React.FC = () => {
               <Switch
                 value={isEssential}
                 onValueChange={setIsEssential}
-                trackColor={{ false: "#767577", true: "#80FF00" }}
-                thumbColor={isEssential ? "#80FF00" : "#f4f3f4"}
+                trackColor={{ false: "#767577", true: "white" }}
+                thumbColor={isEssential ? "white" : "#f4f3f4"}
               />
             </View>
             <View style={styles.switchContainer}>
@@ -226,8 +229,8 @@ const BudgetScreen: React.FC = () => {
               <Switch
                 value={recurringTransaction}
                 onValueChange={setRecurringTransaction}
-                trackColor={{ false: "#767577", true: "#80FF00" }}
-                thumbColor={recurringTransaction ? "#80FF00" : "#f4f3f4"}
+                trackColor={{ false: "#767577", true: "white" }}
+                thumbColor={recurringTransaction ? "white" : "#f4f3f4"}
               />
             </View>
             <View style={styles.switchContainer}>
@@ -235,14 +238,14 @@ const BudgetScreen: React.FC = () => {
               <Switch
                 value={isCredit}
                 onValueChange={setIsCredit}
-                trackColor={{ false: "#767577", true: "#80FF00" }}
-                thumbColor={isEssential ? "#80FF00" : "#f4f3f4"}
+                trackColor={{ false: "#767577", true: "white" }}
+                thumbColor={isEssential ? "white" : "#f4f3f4"}
               />
             </View>
             <Button
               title="Add Expense"
               onPress={handleAddExpense}
-              color="#80FF00"
+              color="white"
             />
           </View>
           <Essential
@@ -274,41 +277,45 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#000F0C",
+    backgroundColor: "#00C293",
   },
   title: {
     fontSize: 24,
     marginBottom: 20,
-    color: "#80FF00",
+    color: "#636363",
     fontWeight: "bold",
   },
   card: {
     padding: 20,
-    backgroundColor: "#000F0C",
+    backgroundColor: "#636363",
     marginBottom: 20,
     borderRadius: 10,
-    borderColor: "#80FF00",
+    borderColor: "white",
     borderWidth: 2,
   },
   cardTitle: {
+    color: "white",
     fontSize: 18,
-    color: "#80FF00",
-    marginBottom: 10,
+    fontWeight: 600,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   input: {
     height: 40,
-    borderColor: "#80FF00",
+    borderColor: "white",
     borderWidth: 1,
+    borderTopRightRadius: 20,
     paddingHorizontal: 10,
     marginBottom: 20,
-    color: "#80FF00",
-    backgroundColor: "#000F0C",
+    color: "white",
+    backgroundColor: "#636363",
   },
   picker: {
     height: 50,
     marginBottom: 20,
     color: "white",
-    backgroundColor: "#000F0C",
+    backgroundColor: "#636363",
   },
   switchContainer: {
     flexDirection: "row",
@@ -318,9 +325,26 @@ const styles = StyleSheet.create({
   },
   switchLabel: {
     color: "white",
+    fontSize: 18,
+    fontWeight: 600,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   button: {
-    marginBottom: 10,
+    marginTop: 25,
+    marginBottom: 0,
+    borderWidth: 2,
+    borderColor: "#00C293",
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: 600,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
