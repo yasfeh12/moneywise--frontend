@@ -85,7 +85,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
   >(undefined);
 
   const [loading, setLoading] = useState<boolean>(true);
-  const { theme, setTheme } = useContext(ThemeContext); //set theme not used
+  const { theme, setTheme } = useContext(ThemeContext); // setTheme not used
 
   const buttonThemeHelper = () => {
     return [
@@ -93,6 +93,12 @@ const ReportScreen: React.FC = (): JSX.Element => {
       theme === "light" ? styles.lightTheme : styles.darkTheme,
     ];
   };
+  // const buttonThemeHelper2 = () => {
+  //   return [
+  //     ,
+  //     theme === "light" ? styles.lightTheme2 : styles.darkTheme2,
+  //   ];
+  // };
 
   useEffect(() => {
     let endpoint = "/api/reports/september";
@@ -224,7 +230,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
             showText={true}
             radius={120}
             innerRadius={50}
-            textColor={"#FFFFFF"}
+            textColor={theme === "light" ? "#000000" : "#FFFFFF"}
             textSize={18}
             innerCircleColor="#000F0C" // matches background color in stylesheet below
             strokeWidth={6} // Add this to create the overlap gap
@@ -245,7 +251,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
             showText={true}
             radius={120}
             innerRadius={50}
-            textColor={"#FFFFFF"}
+            textColor={theme === "light" ? "#000000" : "#FFFFFF"}
             textSize={18}
             innerCircleColor="#000F0C" // matches background color in stylesheet below
             strokeWidth={6} // Add this to create the overlap gap
@@ -271,7 +277,10 @@ const ReportScreen: React.FC = (): JSX.Element => {
             // maxValue={300} // hardcoded, should require in data
             initialSpacing={20}
             width={screenWidth - 40}
-            xAxisLabelTextStyle={{ fontSize: 10, color: "white" }}
+            xAxisLabelTextStyle={{
+              fontSize: 10,
+              color: `${theme === "light" ? "#000000" : "#FFFFFF"}`,
+            }}
             rotateLabel={true} // rotate x axis labels
             yAxisLabelTexts={["0", "60", "120", "180", "240", "300"]}
             yAxisTextStyle={{ color: "white" }}
@@ -313,7 +322,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
         )}
       </View>
       {/* Footer. switch light mode to dark mode */}
-      <View style={styles.container}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ToggleTheme />
       </View>
     </ScrollView>
@@ -335,19 +344,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#80FF00",
+    color: "inherit",
   },
   chartContainer: {
     marginBottom: 40,
     marginHorizontal: 10,
   },
   lightTheme: {
-    backgroundColor: "#333333",
-    color: "#FFFFFF", // not sure why, but it is not applied
-  },
-  darkTheme: {
     backgroundColor: "#FFFFFF",
     color: "#000000", // not sure why, but it is not applied
+  },
+  darkTheme: {
+    backgroundColor: "#000000",
+    color: "#FFFFFF", // not sure why, but it is not applied
   },
 });
 
