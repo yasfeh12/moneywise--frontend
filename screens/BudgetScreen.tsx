@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Essential from "../budgetPages/Essential";
 import NonEssential from "../budgetPages/NonEssential";
 import RecurringTransactions from "../budgetPages/RecurringTransactions";
@@ -15,11 +15,10 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { ProgressBar } from "react-native-paper";
 import axios from "axios";
+import ToggleTheme from "../components/ToggleTheme";
+import { ThemeContext } from "../utils/ThemeContext";
+import apiClient from "../utils/API";
 
-const api = axios.create({
-  baseURL: "http://localhost:9090/api",
-  timeout: 1000,
-});
 const BudgetScreen: React.FC = () => {
   const [expense, setExpense] = useState<string>("");
   const [name, setName] = useState<string>("");
@@ -39,27 +38,30 @@ const BudgetScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [categories, setCategories] = useState([]);
   const [submitCounter, setSubmitCounter] = useState(0);
+  const { theme, setTheme } = useContext(ThemeContext);
+
+  const styles = createStyles(theme);
 
   const getBudget = () => {
-    return api.get("/budget").then((response) => {
+    return apiClient.get("/budget").then((response) => {
       return response.data;
     });
   };
 
   const getCategories = () => {
-    return api.get("/categories").then((response) => {
+    return apiClient.get("/categories").then((response) => {
       return response.data;
     });
   };
 
   const postTransaction = (newTransaction) => {
-    return api.post(`/ledger`, newTransaction).then((response) => {
+    return apiClient.post(`/ledger`, newTransaction).then((response) => {
       return response.data;
     });
   };
 
   const postRecurringTransaction = (newTransaction) => {
-    return api
+    return apiClient
       .post(`/recurring_transactions`, newTransaction)
       .then((response) => {
         return response.data;
@@ -264,89 +266,178 @@ const BudgetScreen: React.FC = () => {
             transactions={budgetData.recurringTransactions}
           />
         </View>
+        {/* Footer */}
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <ToggleTheme />
+        </View>
       </ScrollView>
     </>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#00C293",
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: "bold",
-    color: "white",
-    textAlign: "center",
-    marginBottom: 30,
-  },
-  card: {
-    padding: 20,
-    backgroundColor: "#636363",
-    borderRadius: 15,
-    marginBottom: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    elevation: 5,
-    borderColor: "#fff",
-    borderWidth: 2,
-  },
-  cardTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#00C293",
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  input: {
-    height: 50,
-    borderColor: "#ddd",
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 15,
-    backgroundColor: "#535353",
-    color: "white",
-    marginBottom: 20,
-  },
-  picker: {
-    height: 50,
-    backgroundColor: "#535353",
-    borderRadius: 12,
-    marginBottom: 20,
-    color: "white",
-  },
-  switchContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  switchLabel: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "white",
-  },
-  button: {
-    marginTop: 20,
-    backgroundColor: "white",
-    paddingVertical: 15,
-    borderRadius: 50,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 6,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#00C293",
-  },
-});
+const createStyles = (theme: string) => {
+  return theme === "light"
+    ? StyleSheet.create({
+        container: {
+          flex: 1,
+          padding: 20,
+
+          backgroundColor: "#00C293",
+        },
+
+        title: {
+          fontSize: 26,
+          fontWeight: "bold",
+          color: "white",
+          textAlign: "center",
+          marginBottom: 30,
+        },
+        card: {
+          padding: 20,
+          backgroundColor: "#636363",
+          borderRadius: 15,
+          marginBottom: 20,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.15,
+          shadowRadius: 6,
+          elevation: 5,
+          borderColor: "#fff",
+          borderWidth: 2,
+        },
+        cardTitle: {
+          fontSize: 20,
+          fontWeight: "600",
+          color: "#00C293",
+          marginBottom: 10,
+          textAlign: "center",
+        },
+        input: {
+          height: 50,
+          borderColor: "#ddd",
+          borderWidth: 1,
+          borderRadius: 12,
+          paddingHorizontal: 15,
+          backgroundColor: "#535353",
+          color: "white",
+          marginBottom: 20,
+        },
+        picker: {
+          height: 50,
+          backgroundColor: "#535353",
+          borderRadius: 12,
+          marginBottom: 20,
+          color: "white",
+        },
+        switchContainer: {
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 20,
+        },
+        switchLabel: {
+          fontSize: 18,
+          fontWeight: "600",
+          color: "white",
+        },
+        button: {
+          marginTop: 20,
+          backgroundColor: "white",
+          paddingVertical: 15,
+          borderRadius: 50,
+          alignItems: "center",
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 3 },
+          shadowOpacity: 0.2,
+          shadowRadius: 5,
+          elevation: 6,
+        },
+        buttonText: {
+          fontSize: 18,
+          fontWeight: "600",
+          color: "#00C293",
+        },
+      })
+    : StyleSheet.create({
+        container: {
+          flex: 1,
+          padding: 20,
+
+          backgroundColor: "#000F0C",
+        },
+        title: {
+          fontSize: 26,
+          fontWeight: "bold",
+          color: "white",
+          textAlign: "center",
+          marginBottom: 30,
+        },
+        card: {
+          padding: 20,
+          backgroundColor: "#636363",
+          borderRadius: 15,
+          marginBottom: 20,
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.15,
+          shadowRadius: 6,
+          elevation: 5,
+          borderColor: "#fff",
+          borderWidth: 2,
+        },
+        cardTitle: {
+          fontSize: 20,
+          fontWeight: "600",
+          color: "#00C293",
+          marginBottom: 10,
+          textAlign: "center",
+        },
+        input: {
+          height: 50,
+          borderColor: "#ddd",
+          borderWidth: 1,
+          borderRadius: 12,
+          paddingHorizontal: 15,
+          backgroundColor: "#535353",
+          color: "white",
+          marginBottom: 20,
+        },
+        picker: {
+          height: 50,
+          backgroundColor: "#535353",
+          borderRadius: 12,
+          marginBottom: 20,
+          color: "white",
+        },
+        switchContainer: {
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 20,
+        },
+        switchLabel: {
+          fontSize: 18,
+          fontWeight: "600",
+          color: "white",
+        },
+        button: {
+          marginTop: 20,
+          backgroundColor: "white",
+          paddingVertical: 15,
+          borderRadius: 50,
+          alignItems: "center",
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 3 },
+          shadowOpacity: 0.2,
+          shadowRadius: 5,
+          elevation: 6,
+        },
+        buttonText: {
+          fontSize: 18,
+          fontWeight: "600",
+          color: "#00C293",
+        },
+      });
+};
 
 export default BudgetScreen;

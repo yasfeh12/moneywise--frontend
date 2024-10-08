@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   Text,
@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import axios from "axios";
+import ToggleTheme from "../components/ToggleTheme";
+import { ThemeContext } from "../utils/ThemeContext";
 
 const companies = [
   "AAPL",
@@ -34,6 +36,9 @@ const StockScreen = () => {
   const [stockData, setStockData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { theme, setTheme } = useContext(ThemeContext);
+
+  const styles = createStyles(theme);
 
   const fetchStockData = async () => {
     try {
@@ -107,54 +112,108 @@ const StockScreen = () => {
           <Button title="Add to Favorites" onPress={() => {}} color="#80FF00" />
         </View>
       ))}
+      {/* Footer */}
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <ToggleTheme />
+      </View>
     </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#000F0C",
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    color: "#80FF00",
-    fontWeight: "bold",
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 18,
-    color: "#80FF00",
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  errorText: {
-    fontSize: 18,
-    color: "#FF0000",
-  },
-  card: {
-    padding: 20,
-    backgroundColor: "#000F0C",
-    marginBottom: 20,
-    borderRadius: 10,
-    borderColor: "#80FF00",
-    borderWidth: 2,
-  },
-  stockTitle: {
-    fontSize: 18,
-    color: "#80FF00",
-    marginBottom: 10,
-  },
-});
+const createStyles = (theme: string) => {
+  return theme === "light"
+    ? StyleSheet.create({
+        container: {
+          flex: 1,
+          padding: 20,
+
+          backgroundColor: "#00C293",
+        },
+        title: {
+          fontSize: 24,
+          marginBottom: 20,
+          color: "#80FF00",
+          fontWeight: "bold",
+        },
+        loadingContainer: {
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        loadingText: {
+          marginTop: 10,
+          fontSize: 18,
+          color: "#80FF00",
+        },
+        errorContainer: {
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        errorText: {
+          fontSize: 18,
+          color: "#FF0000",
+        },
+        card: {
+          padding: 20,
+          backgroundColor: "#000F0C",
+          marginBottom: 20,
+          borderRadius: 10,
+          borderColor: "#80FF00",
+          borderWidth: 2,
+        },
+        stockTitle: {
+          fontSize: 18,
+          color: "#80FF00",
+          marginBottom: 10,
+        },
+      })
+    : StyleSheet.create({
+        container: {
+          flex: 1,
+          padding: 20,
+
+          backgroundColor: "#000F0C",
+        },
+        title: {
+          fontSize: 24,
+          marginBottom: 20,
+          color: "#80FF00",
+          fontWeight: "bold",
+        },
+        loadingContainer: {
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        loadingText: {
+          marginTop: 10,
+          fontSize: 18,
+          color: "#80FF00",
+        },
+        errorContainer: {
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        errorText: {
+          fontSize: 18,
+          color: "#FF0000",
+        },
+        card: {
+          padding: 20,
+          backgroundColor: "#000F0C",
+          marginBottom: 20,
+          borderRadius: 10,
+          borderColor: "#80FF00",
+          borderWidth: 2,
+        },
+        stockTitle: {
+          fontSize: 18,
+          color: "#80FF00",
+          marginBottom: 10,
+        },
+      });
+};
 
 export default StockScreen;

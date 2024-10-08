@@ -81,20 +81,9 @@ const ReportScreen: React.FC = (): JSX.Element => {
   >(undefined);
 
   const [loading, setLoading] = useState<boolean>(true);
-  const { theme, setTheme } = useContext(ThemeContext); // "setTheme" not used for now
+  const { theme, setTheme } = useContext(ThemeContext);
 
-  const buttonThemeHelper = () => {
-    return [
-      styles.scrollContainer,
-      theme === "light" ? styles.lightTheme : styles.darkTheme,
-    ];
-  };
-  // const buttonThemeHelper2 = () => {
-  //   return [
-  //     ,
-  //     theme === "light" ? styles.lightTheme2 : styles.darkTheme2,
-  //   ];
-  // };
+  const styles = createStyles(theme);
 
   useEffect(() => {
     let endpoint = "/reports/september";
@@ -207,8 +196,9 @@ const ReportScreen: React.FC = (): JSX.Element => {
         setLoading(false);
       });
   }, []);
+
   return (
-    <ScrollView contentContainerStyle={buttonThemeHelper()}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
         <Text style={styles.title}>Monthly Financial Report 1</Text>
       </View>
@@ -317,43 +307,72 @@ const ReportScreen: React.FC = (): JSX.Element => {
           />
         )}
       </View>
-      {/* Footer. switch light mode to dark mode */}
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      {/* Footer */}
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 50,
+        }}
+      >
         <ToggleTheme />
       </View>
     </ScrollView>
   );
 };
 
-const styles = StyleSheet.create({
-  scrollContainer: {
-    paddingVertical: 20,
-    paddingHorizontal: 10,
-    backgroundColor: "#000F0C",
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#000F0C",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "inherit",
-  },
-  chartContainer: {
-    marginBottom: 40,
-    marginHorizontal: 10,
-  },
-  lightTheme: {
-    backgroundColor: "#FFFFFF",
-    color: "#000000", // not sure why, but it is not applied
-  },
-  darkTheme: {
-    backgroundColor: "#000000",
-    color: "#FFFFFF", // not sure why, but it is not applied
-  },
-});
+const createStyles = (theme: string) => {
+  return theme === "light"
+    ? StyleSheet.create({
+        scrollContainer: {
+          paddingVertical: 20,
+          paddingHorizontal: 10,
+
+          backgroundColor: "#00C293",
+          color: "#000000",
+        },
+
+        container: {
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#000F0C",
+        },
+        title: {
+          fontSize: 24,
+          fontWeight: "bold",
+          color: "inherit",
+        },
+        chartContainer: {
+          marginBottom: 40,
+          marginHorizontal: 10,
+        },
+      })
+    : StyleSheet.create({
+        scrollContainer: {
+          paddingVertical: 20,
+          paddingHorizontal: 10,
+
+          backgroundColor: "#000F0C",
+          color: "#FFFFFF",
+        },
+
+        container: {
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#000F0C",
+        },
+        title: {
+          fontSize: 24,
+          fontWeight: "bold",
+          color: "inherit",
+        },
+        chartContainer: {
+          marginBottom: 40,
+          marginHorizontal: 10,
+        },
+      });
+};
 
 export default ReportScreen;
