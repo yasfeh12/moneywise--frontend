@@ -7,11 +7,13 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
 import { ProgressBar } from "react-native-paper";
 import { StackNavigationProp } from "@react-navigation/stack";
 import ToggleTheme from "../components/ToggleTheme";
 import { ThemeContext } from "../utils/ThemeContext";
+
 interface OverviewData {
   overview: {
     income: number;
@@ -98,20 +100,24 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       </View>
 
       <Text style={styles.progressTitle}>Savings Goal Progress</Text>
-      <ProgressBar
-        progress={progress}
-        color="#80FF00"
-        style={styles.progressBar}
-      />
-      <Text style={styles.info}>
+      <View style={{ marginBottom: 35 }}>
+        <ProgressBar
+          progress={progress}
+          color={theme === "light" ? "grey" : "#00C293"}
+          style={styles.progressBar}
+        />
+      </View>
+      <Text style={styles.progressText}>
         Progress: £{totalGoalsProgress ?? 0} / £{totalGoalsTarget ?? 0}
       </Text>
 
-      <Button
-        title="Edit Budgets"
+      <TouchableOpacity
+        style={styles.button}
         onPress={() => navigation.navigate("Budgets")}
-        color={`${theme === "light" ? "white" : "#80FF00"}`}
-      />
+      >
+        <Text style={styles.buttonText}>Edit Budgets</Text>
+      </TouchableOpacity>
+
       {/* Footer */}
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <ToggleTheme />
@@ -126,7 +132,6 @@ const createStyles = (theme: string) => {
         container: {
           flex: 1,
           padding: 20,
-
           backgroundColor: "#00C293",
         },
         profileSection: {
@@ -143,7 +148,6 @@ const createStyles = (theme: string) => {
         welcome: {
           fontSize: 20,
           fontWeight: "bold",
-
           color: "white",
         },
         title: {
@@ -161,17 +165,17 @@ const createStyles = (theme: string) => {
           shadowOpacity: 0.3,
           shadowRadius: 5,
           elevation: 5,
-          borderWidth: 1,
+          borderWidth: 4,
 
           borderColor: "#fff",
           backgroundColor: "#636363",
         },
         info: {
-          fontSize: 16,
+          fontSize: 26,
           marginBottom: 5,
-
-          color: "#00C293",
-          fontWeight: 700,
+          color: "white",
+          fontWeight: 400,
+          padding: 14,
         },
         progressTitle: {
           fontSize: 16,
@@ -181,8 +185,9 @@ const createStyles = (theme: string) => {
           color: "white",
         },
         progressBar: {
-          height: 10,
+          height: 20,
           borderRadius: 5,
+          margin: 5,
         },
         loadingContainer: {
           flex: 1,
@@ -194,13 +199,31 @@ const createStyles = (theme: string) => {
           justifyContent: "center",
           alignItems: "center",
         },
+        button: {
+          marginTop: 20,
+          backgroundColor: "white",
+          paddingVertical: 15,
+          borderRadius: 50,
+          alignItems: "center",
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 3 },
+          shadowOpacity: 0.2,
+          shadowRadius: 5,
+          elevation: 6,
+        },
+        buttonText: {
+          fontSize: 18,
+          fontWeight: "600",
+          color: "#00C293",
+        },
+        progressText: { color: "white", fontSize: 18, fontWeight: 700 },
       })
     : StyleSheet.create({
         container: {
           flex: 1,
           padding: 20,
 
-          backgroundColor: "#000F0C",
+          backgroundColor: "grey",
         },
         profileSection: {
           flexDirection: "row",
@@ -217,14 +240,14 @@ const createStyles = (theme: string) => {
           fontSize: 20,
           fontWeight: "bold",
 
-          color: "#80FF00",
+          color: "black",
         },
         title: {
           fontSize: 24,
           fontWeight: "bold",
           marginBottom: 10,
 
-          color: "#80FF00",
+          color: "black",
         },
         card: {
           padding: 15,
@@ -234,28 +257,29 @@ const createStyles = (theme: string) => {
           shadowOpacity: 0.3,
           shadowRadius: 5,
           elevation: 5,
-          borderWidth: 1,
+          borderWidth: 4,
 
-          borderColor: "#80FF00",
-          backgroundColor: "#000F0C",
+          borderColor: "#00C293",
+          backgroundColor: "black",
         },
         info: {
-          fontSize: 16,
+          fontSize: 26,
           marginBottom: 5,
-
-          color: "white",
-          fontWeight: 700,
+          color: "#9EADAD",
+          fontWeight: 400,
+          padding: 14,
         },
         progressTitle: {
           fontSize: 16,
           fontWeight: "bold",
           marginBottom: 10,
 
-          color: "#80FF00",
+          color: "black",
         },
         progressBar: {
-          height: 10,
+          height: 20,
           borderRadius: 5,
+          margin: 5,
         },
 
         loadingContainer: {
@@ -269,6 +293,24 @@ const createStyles = (theme: string) => {
           justifyContent: "center",
           alignItems: "center",
         },
+        button: {
+          marginTop: 20,
+          backgroundColor: "black",
+          paddingVertical: 15,
+          borderRadius: 50,
+          alignItems: "center",
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 3 },
+          shadowOpacity: 0.2,
+          shadowRadius: 5,
+          elevation: 6,
+        },
+        buttonText: {
+          fontSize: 18,
+          fontWeight: "600",
+          color: "#9EADAD",
+        },
+        progressText: { color: "black", fontSize: 18, fontWeight: 700 },
       });
 };
 export default HomeScreen;

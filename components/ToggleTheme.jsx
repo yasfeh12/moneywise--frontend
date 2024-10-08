@@ -21,12 +21,12 @@ const ToggleTheme = () => {
 
   return (
     <View style={styles.switchContainer}>
-      <Text style={styles.switchLabel}>{theme} mode </Text>
+      <Text style={styles.switchLabel}>{theme} Mode </Text>
       <Switch
         value={theme === "dark" ? true : false}
         onValueChange={toggleThemeHelper}
-        trackColor={{ false: "#767577", true: "#80FF00" }}
-        thumbColor={theme === "light" ? "#80FF00" : "#f4f3f4"}
+        trackColor={{ false: "#767577", true: "#00C293" }}
+        thumbColor={theme === "light" ? "grey" : "#f4f3f4"}
       />
     </View>
   );
@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   switchContainer: {
+    marginTop: 25,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -58,6 +59,8 @@ const styles = StyleSheet.create({
   },
   switchLabel: {
     color: "inherit",
+    fontWeight: 600,
+    fontSize: 18,
   },
 });
 
