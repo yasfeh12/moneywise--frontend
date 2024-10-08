@@ -265,11 +265,11 @@ const BudgetScreen: React.FC = () => {
             setTransactionsPageVisible={setTransactionsPageVisible}
             transactions={budgetData.recurringTransactions}
           />
-        </View>
-        {/* Footer */}
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <ToggleTheme />
         </View>
+        </View>
+        {/* Footer */}
       </ScrollView>
     </>
   );
