@@ -19,7 +19,10 @@ const SavingsScreen = () => {
   const [savingsGoals, setSavingsGoals] = useState([]);
   const [error, setError] = useState({ msg: "", goalId: null });
   const [amountSaved, setAmountSaved] = useState({});
-  const { theme, setTheme } = useContext(ThemeContext); // "setTheme" not used for now
+  const { theme, setTheme } = useContext(ThemeContext);
+
+  const styles = createStyles(theme);
+
   const getGoals = () => {
     return apiClient.get("/goals").then((response) => {
       return response.data;
@@ -145,6 +148,7 @@ const SavingsScreen = () => {
         setError({ msg: "failed to delete", goalId: goal_id });
       });
   };
+
   return (
     <>
       <View style={styles.container}>
@@ -210,53 +214,103 @@ const SavingsScreen = () => {
           )}
         />
       </View>
-      {/* Footer. switch light mode to dark mode */}
+      {/* Footer */}
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ToggleTheme />
       </View>
     </>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#000F0C",
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    color: "#80FF00",
-    fontWeight: "bold",
-  },
-  input: {
-    height: 40,
-    borderColor: "#80FF00",
-    borderWidth: 1,
-    paddingHorizontal: 10,
-    marginBottom: 20,
-    color: "#FFFFFF",
-    backgroundColor: "#000F0C",
-  },
-  card: {
-    padding: 20,
-    backgroundColor: "#000F0C",
-    marginBottom: 20,
-    borderRadius: 10,
-    borderColor: "#80FF00",
-    borderWidth: 2,
-  },
-  cardText: {
-    fontSize: 18,
-    color: "#FFFFFF",
-  },
-  addButtonContainer: {
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  progress: {
-    marginBottom: 0,
-    padding: 0,
-  },
-});
+
+const createStyles = (theme) => {
+  return theme === "light"
+    ? StyleSheet.create({
+        container: {
+          flex: 1,
+          padding: 20,
+
+          backgroundColor: "#00C293",
+        },
+
+        title: {
+          fontSize: 24,
+          marginBottom: 20,
+          color: "#80FF00",
+          fontWeight: "bold",
+        },
+        input: {
+          height: 40,
+          borderColor: "#80FF00",
+          borderWidth: 1,
+          paddingHorizontal: 10,
+          marginBottom: 20,
+          color: "#FFFFFF",
+          backgroundColor: "#000F0C",
+        },
+        card: {
+          padding: 20,
+          backgroundColor: "#000F0C",
+          marginBottom: 20,
+          borderRadius: 10,
+          borderColor: "#80FF00",
+          borderWidth: 2,
+        },
+        cardText: {
+          fontSize: 18,
+          color: "#FFFFFF",
+        },
+        addButtonContainer: {
+          marginTop: 20,
+          marginBottom: 10,
+        },
+        progress: {
+          marginBottom: 0,
+          padding: 0,
+        },
+      })
+    : StyleSheet.create({
+        container: {
+          flex: 1,
+          padding: 20,
+
+          backgroundColor: "#000F0C",
+        },
+
+        title: {
+          fontSize: 24,
+          marginBottom: 20,
+          color: "#80FF00",
+          fontWeight: "bold",
+        },
+        input: {
+          height: 40,
+          borderColor: "#80FF00",
+          borderWidth: 1,
+          paddingHorizontal: 10,
+          marginBottom: 20,
+          color: "#FFFFFF",
+          backgroundColor: "#000F0C",
+        },
+        card: {
+          padding: 20,
+          backgroundColor: "#000F0C",
+          marginBottom: 20,
+          borderRadius: 10,
+          borderColor: "#80FF00",
+          borderWidth: 2,
+        },
+        cardText: {
+          fontSize: 18,
+          color: "#FFFFFF",
+        },
+        addButtonContainer: {
+          marginTop: 20,
+          marginBottom: 10,
+        },
+        progress: {
+          marginBottom: 0,
+          padding: 0,
+        },
+      });
+};
 export default SavingsScreen;
