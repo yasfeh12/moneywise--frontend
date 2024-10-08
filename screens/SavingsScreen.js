@@ -11,6 +11,7 @@ import { ProgressBar } from "react-native-paper";
 import apiClient from "../utils/API";
 import ToggleTheme from "../components/ToggleTheme";
 import { ThemeContext } from "../utils/ThemeContext";
+import { TouchableOpacity } from "react-native";
 //import { TouchableOpacity } from "react-native";
 
 const SavingsScreen = () => {
@@ -152,6 +153,7 @@ const SavingsScreen = () => {
   return (
     <>
       <View style={styles.container}>
+        <View style={styles.card}>
         <Text style={styles.title}>Savings Goals</Text>
         <TextInput
           placeholder="Goal Name"
@@ -168,7 +170,8 @@ const SavingsScreen = () => {
           onChangeText={setTargetAmount}
           keyboardType="numeric"
         />
-        <Button title="Add Goal" onPress={addSavingsGoal} />
+        <Button title="Add Goal" onPress={addSavingsGoal} color={"#00C293"} />
+        </View>
         <FlatList
           data={savingsGoals}
           keyExtractor={(item) => item.goal_id.toString()}
@@ -187,14 +190,27 @@ const SavingsScreen = () => {
                 }
                 keyboardType="numeric"
               />
-              <Button
+              {/* <Button
                 title="Update"
                 onPress={() => updateSavingsProgress(item.goal_id)}
-              />
-              <Button title="Delete" onPress={() => deleteGoal(item.goal_id)} />
+              /> */}
+              <TouchableOpacity
+              style={styles.button}
+              onPress={() => updateSavingsProgress(item.goal_id)}
+              >
+                <Text style={styles.buttonText}>Update</Text>
+              </TouchableOpacity>
+              {/* <Button title="Delete" onPress={() => deleteGoal(item.goal_id)} /> */}
+              <TouchableOpacity
+              style={styles.button}
+              onPress={() => deleteGoal(item.goal_id)}
+              >
+                <Text style={styles.buttonText}>Delete</Text>
+              </TouchableOpacity>
               {error.goalId && error.goalId === item.goal_id && (
                 <Text>{error.msg}</Text>
               )}
+              <View style={{marginTop: 20, height: 20, borderRadius: 5}}>
               <ProgressBar
                 progress={
                   item.target_amount
@@ -203,6 +219,7 @@ const SavingsScreen = () => {
                 }
                 color="blue"
               />
+              </View>
               <Text style={styles.cardText}>
                 Progress:{" "}
                 {item.target_amount
@@ -213,104 +230,266 @@ const SavingsScreen = () => {
             </View>
           )}
         />
-      </View>
-      {/* Footer */}
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 15 }}>
         <ToggleTheme />
       </View>
+      </View>
+      {/* Footer */}
     </>
   );
 };
 
 const createStyles = (theme) => {
   return theme === "light"
+    // ? StyleSheet.create({
+    //     container: {
+    //       flex: 1,
+    //       padding: 20,
+
+    //       backgroundColor: "#00C293",
+    //     },
+
+    //     title: {
+    //       fontSize: 24,
+    //       marginBottom: 20,
+    //       color: "#80FF00",
+    //       fontWeight: "bold",
+    //     },
+    //     input: {
+    //       height: 40,
+    //       borderColor: "#80FF00",
+    //       borderWidth: 1,
+    //       paddingHorizontal: 10,
+    //       marginBottom: 20,
+    //       color: "#FFFFFF",
+    //       backgroundColor: "#000F0C",
+    //     },
+    //     card: {
+    //       padding: 20,
+    //       backgroundColor: "#000F0C",
+    //       marginBottom: 20,
+    //       borderRadius: 10,
+    //       borderColor: "#80FF00",
+    //       borderWidth: 2,
+    //     },
+    //     cardText: {
+    //       fontSize: 18,
+    //       color: "#FFFFFF",
+    //     },
+    //     addButtonContainer: {
+    //       marginTop: 20,
+    //       marginBottom: 10,
+    //     },
+    //     progress: {
+    //       marginBottom: 0,
+    //       padding: 0,
+    //     },
+    //   })
+    // : StyleSheet.create({
+    //     container: {
+    //       flex: 1,
+    //       padding: 20,
+
+    //       backgroundColor: "#000F0C",
+    //     },
+
+    //     title: {
+    //       fontSize: 24,
+    //       marginBottom: 20,
+    //       color: "#80FF00",
+    //       fontWeight: "bold",
+    //     },
+    //     input: {
+    //       height: 40,
+    //       borderColor: "#80FF00",
+    //       borderWidth: 1,
+    //       paddingHorizontal: 10,
+    //       marginBottom: 20,
+    //       color: "#FFFFFF",
+    //       backgroundColor: "#000F0C",
+    //     },
+    //     card: {
+    //       padding: 20,
+    //       backgroundColor: "#000F0C",
+    //       marginBottom: 20,
+    //       borderRadius: 10,
+    //       borderColor: "#80FF00",
+    //       borderWidth: 2,
+    //     },
+    //     cardText: {
+    //       fontSize: 18,
+    //       color: "#FFFFFF",
+    //     },
+    //     addButtonContainer: {
+    //       marginTop: 20,
+    //       marginBottom: 10,
+    //     },
+    //     progress: {
+    //       marginBottom: 0,
+    //       padding: 0,
+    //     },
+    //   });
+
     ? StyleSheet.create({
-        container: {
-          flex: 1,
-          padding: 20,
+      container: {
+        flex: 1,
+        padding: 20,
 
-          backgroundColor: "#00C293",
-        },
+        backgroundColor: "#00C293",
+      },
 
-        title: {
-          fontSize: 24,
-          marginBottom: 20,
-          color: "#80FF00",
-          fontWeight: "bold",
-        },
-        input: {
-          height: 40,
-          borderColor: "#80FF00",
-          borderWidth: 1,
-          paddingHorizontal: 10,
-          marginBottom: 20,
-          color: "#FFFFFF",
-          backgroundColor: "#000F0C",
-        },
-        card: {
-          padding: 20,
-          backgroundColor: "#000F0C",
-          marginBottom: 20,
-          borderRadius: 10,
-          borderColor: "#80FF00",
-          borderWidth: 2,
-        },
-        cardText: {
-          fontSize: 18,
-          color: "#FFFFFF",
-        },
-        addButtonContainer: {
-          marginTop: 20,
-          marginBottom: 10,
-        },
-        progress: {
-          marginBottom: 0,
-          padding: 0,
-        },
-      })
-    : StyleSheet.create({
-        container: {
-          flex: 1,
-          padding: 20,
+      title: {
+        fontSize: 26,
+        fontWeight: "bold",
+        color: "white",
+        textAlign: "center",
+        marginBottom: 30,
+      },
+      card: {
+        padding: 20,
+        backgroundColor: "#636363",
+        borderRadius: 15,
+        margin: 20,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
+        elevation: 5,
+        borderColor: "white",
+        borderWidth: 4,
+      },
+      cardText: {
+        fontSize: 25,
+        fontWeight: "600",
+        color: "#00C293",
+        marginBottom: 10,
+        textAlign: "center",
+      },
+      input: {
+        height: 50,
+        borderColor: "#ddd",
+        borderWidth: 1,
+        borderRadius: 12,
+        paddingHorizontal: 15,
+        backgroundColor: "#535353",
+        color: "white",
+        marginBottom: 20,
+      },
+      picker: {
+        height: 50,
+        backgroundColor: "#535353",
+        borderRadius: 12,
+        marginBottom: 20,
+        color: "white",
+      },
+      switchContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 20,
+      },
+      switchLabel: {
+        fontSize: 18,
+        fontWeight: "600",
+        color: "white",
+      },
+      button: {
+        marginTop: 20,
+        backgroundColor: "white",
+        paddingVertical: 15,
+        borderRadius: 50,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 6,
+      },
+      buttonText: {
+        fontSize: 18,
+        fontWeight: "600",
+        color: "#00C293",
+      },
+    })
+  : StyleSheet.create({
+      container: {
+        flex: 1,
+        padding: 20,
 
-          backgroundColor: "#000F0C",
-        },
-
-        title: {
-          fontSize: 24,
-          marginBottom: 20,
-          color: "#80FF00",
-          fontWeight: "bold",
-        },
-        input: {
-          height: 40,
-          borderColor: "#80FF00",
-          borderWidth: 1,
-          paddingHorizontal: 10,
-          marginBottom: 20,
-          color: "#FFFFFF",
-          backgroundColor: "#000F0C",
-        },
-        card: {
-          padding: 20,
-          backgroundColor: "#000F0C",
-          marginBottom: 20,
-          borderRadius: 10,
-          borderColor: "#80FF00",
-          borderWidth: 2,
-        },
-        cardText: {
-          fontSize: 18,
-          color: "#FFFFFF",
-        },
-        addButtonContainer: {
-          marginTop: 20,
-          marginBottom: 10,
-        },
-        progress: {
-          marginBottom: 0,
-          padding: 0,
-        },
-      });
+        backgroundColor: "grey",
+      },
+      title: {
+        fontSize: 26,
+        fontWeight: "bold",
+        color: "#9EADAD",
+        textAlign: "center",
+        marginBottom: 30,
+      },
+      card: {
+        padding: 20,
+        backgroundColor: "black",
+        borderRadius: 15,
+        marginBottom: 20,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 6,
+        elevation: 5,
+        borderColor: "#00C293",
+        borderWidth: 4,
+      },
+      cardText: {
+        fontSize: 20,
+        fontWeight: "600",
+        color: "#9EADAD",
+        marginBottom: 10,
+        textAlign: "center",
+      },
+      input: {
+        height: 50,
+        borderColor: "#ddd",
+        borderWidth: 1,
+        borderRadius: 12,
+        paddingHorizontal: 15,
+        backgroundColor: "#535353",
+        color: "white",
+        marginBottom: 20,
+      },
+      picker: {
+        height: 50,
+        backgroundColor: "#535353",
+        borderRadius: 12,
+        marginBottom: 20,
+        color: "white",
+      },
+      switchContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 20,
+      },
+      switchLabel: {
+        fontSize: 18,
+        fontWeight: "600",
+        color: "white",
+      },
+      button: {
+        marginTop: 20,
+        backgroundColor: "white",
+        paddingVertical: 15,
+        borderRadius: 50,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        shadowRadius: 5,
+        elevation: 6,
+      },
+      buttonText: {
+        fontSize: 18,
+        fontWeight: "600",
+        color: "black",
+      },
+    });
 };
 export default SavingsScreen;
