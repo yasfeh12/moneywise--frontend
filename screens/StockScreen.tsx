@@ -112,16 +112,20 @@ const StockScreen = () => {
             }}
           />
           <Button
-           title={favorites.includes(stock.symbol) ? "Remove from Favorites" : "Add to Favorites"}
-           onPress={() => {
-             if (favorites.includes(stock.symbol)) {
-               removeFavorite(stock.symbol);
-             } else {
-               addFavorite(stock.symbol);
-             }
-           }}
-           color="#80FF00"
-         />
+            title={
+              favorites.includes(stock.symbol)
+                ? "Remove from Favorites"
+                : "Add to Favorites"
+            }
+            onPress={() => {
+              if (favorites.includes(stock.symbol)) {
+                removeFavorite(stock.symbol);
+              } else {
+                addFavorite(stock.symbol);
+              }
+            }}
+            color="#80FF00"
+          />
         </View>
       ))}
       {/* Footer */}
@@ -140,11 +144,12 @@ const createStyles = (theme: string) => {
           padding: 20,
 
           backgroundColor: "#00C293",
+          //TEAl
         },
         title: {
           fontSize: 24,
           marginBottom: 20,
-          color: "#80FF00",
+          color: "white",
           fontWeight: "bold",
         },
         loadingContainer: {
@@ -155,7 +160,7 @@ const createStyles = (theme: string) => {
         loadingText: {
           marginTop: 10,
           fontSize: 18,
-          color: "#80FF00",
+          color: "white",
         },
         errorContainer: {
           flex: 1,
@@ -171,12 +176,12 @@ const createStyles = (theme: string) => {
           backgroundColor: "#000F0C",
           marginBottom: 20,
           borderRadius: 10,
-          borderColor: "#80FF00",
-          borderWidth: 2,
+          borderColor: "white",
+          borderWidth: 4,
         },
         stockTitle: {
           fontSize: 18,
-          color: "#80FF00",
+          color: "white",
           marginBottom: 10,
         },
       })
