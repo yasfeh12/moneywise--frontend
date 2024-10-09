@@ -11,6 +11,7 @@ import { LineChart } from "react-native-chart-kit";
 import axios from "axios";
 import ToggleTheme from "../components/ToggleTheme";
 import { ThemeContext } from "../utils/ThemeContext";
+import { useFavorites } from "./FavoritesContext";
 
 const companies = [
   "AAPL",
@@ -37,6 +38,7 @@ const StockScreen = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { theme, setTheme } = useContext(ThemeContext);
+  const { favorites, addFavorite, removeFavorite } = useFavorites();
 
   const styles = createStyles(theme);
 
@@ -46,7 +48,7 @@ const StockScreen = () => {
         const queryURL = buildQueryURLCurrent(symbol);
         const response = await axios.get(queryURL);
         return {
-          name: symbol,
+          symbol,
           data: [
             response.data.o,
             response.data.h,
@@ -109,7 +111,17 @@ const StockScreen = () => {
               strokeWidth: 2,
             }}
           />
-          <Button title="Add to Favorites" onPress={() => {}} color="#80FF00" />
+          <Button
+           title={favorites.includes(stock.symbol) ? "Remove from Favorites" : "Add to Favorites"}
+           onPress={() => {
+             if (favorites.includes(stock.symbol)) {
+               removeFavorite(stock.symbol);
+             } else {
+               addFavorite(stock.symbol);
+             }
+           }}
+           color="#80FF00"
+         />
         </View>
       ))}
       {/* Footer */}
