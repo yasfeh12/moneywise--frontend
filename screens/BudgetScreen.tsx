@@ -265,11 +265,11 @@ const BudgetScreen: React.FC = () => {
             setTransactionsPageVisible={setTransactionsPageVisible}
             transactions={budgetData.recurringTransactions}
           />
-        </View>
-        {/* Footer */}
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
           <ToggleTheme />
         </View>
+        </View>
+        {/* Footer */}
       </ScrollView>
     </>
   );
@@ -302,8 +302,8 @@ const createStyles = (theme: string) => {
           shadowOpacity: 0.15,
           shadowRadius: 6,
           elevation: 5,
-          borderColor: "#fff",
-          borderWidth: 2,
+          borderColor: "white",
+          borderWidth: 4,
         },
         cardTitle: {
           fontSize: 20,
@@ -363,18 +363,18 @@ const createStyles = (theme: string) => {
           flex: 1,
           padding: 20,
 
-          backgroundColor: "#000F0C",
+          backgroundColor: "grey",
         },
         title: {
           fontSize: 26,
           fontWeight: "bold",
-          color: "white",
+          color: "black",
           textAlign: "center",
           marginBottom: 30,
         },
         card: {
           padding: 20,
-          backgroundColor: "#636363",
+          backgroundColor: "black",
           borderRadius: 15,
           marginBottom: 20,
           shadowColor: "#000",
@@ -382,13 +382,13 @@ const createStyles = (theme: string) => {
           shadowOpacity: 0.15,
           shadowRadius: 6,
           elevation: 5,
-          borderColor: "#fff",
-          borderWidth: 2,
+          borderColor: "#00C293",
+          borderWidth: 4,
         },
         cardTitle: {
           fontSize: 20,
           fontWeight: "600",
-          color: "#00C293",
+          color: "#9EADAD",
           marginBottom: 10,
           textAlign: "center",
         },
@@ -435,7 +435,7 @@ const createStyles = (theme: string) => {
         buttonText: {
           fontSize: 18,
           fontWeight: "600",
-          color: "#00C293",
+          color: "black",
         },
       });
 };

@@ -19,16 +19,16 @@ const Essential = ({
           renderItem={({ item }) => (
             <View style={styles.card}>
               <Text style={styles.cardText}> {item.name}</Text>{" "}
-              <Text style={styles.cardText}> Target: £{item.amount}</Text>{" "}
-              <Text style={styles.cardText}> Target: £{item.category}</Text>{" "}
+              <Text style={styles.cardText}> Price: £{item.amount}</Text>{" "}
+              <Text style={styles.cardText}> Category: {item.category}</Text>{" "}
               {/* <Button title="Delete" onPress={() => deleteGoal(item.goal_id)} /> */}
               {/* {error.goalId && error.goalId === item.goal_id && (<Text>{error.msg}</Text>)} */}
             </View>
           )}
         />
         <Button
-          title="backToBudget"
-          color="#80FF00"
+          title="back To Budget"
+          color="#00C293"
           onPress={() => {
             setEssentialPageVisible(false);
           }}
@@ -42,13 +42,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#000F0C",
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-    color: "#80FF00",
-    fontWeight: "bold",
+    backgroundColor: "grey",
   },
   input: {
     height: 40,
@@ -60,16 +54,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#000F0C",
   },
   card: {
-    padding: 20,
-    backgroundColor: "#000F0C",
+    padding: 10,
+    backgroundColor: "black",
+    borderRadius: 15,
     marginBottom: 20,
-    borderRadius: 10,
-    borderColor: "#80FF00",
-    borderWidth: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 5,
+    borderColor: "#00C293",
+    borderWidth: 4,
   },
   cardText: {
-    fontSize: 18,
-    color: "#FFFFFF",
+    fontSize: 24,
+    fontWeight: "600",
+    color: "#9EADAD",
+    marginBottom: 10,
+    textAlign: "center",
   },
   addButtonContainer: {
     marginTop: 20,

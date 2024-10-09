@@ -10,6 +10,7 @@ import {
   Alert,
   ScrollView,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
@@ -60,6 +61,10 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>
+        MONEY <Text style={styles.title2}>WISE</Text>
+      </Text>
+
       <View style={styles.imageContainer}>
         <Image
           source={{
@@ -68,30 +73,32 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
           style={styles.image}
         />
       </View>
-      <Text style={styles.title}>Money-wise</Text>
 
       <View style={styles.buttonContainer}>
-        <Button
-          title="Log In"
+        <TouchableOpacity
+          style={styles.button}
           onPress={() => setLoginModalVisible(true)}
-          color="#80FF00"
-        />
+        >
+          <Text style={styles.buttonText}>Log In</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button
-          title="Sign Up"
+        <TouchableOpacity
+          style={styles.button}
           onPress={() => setSignUpModalVisible(true)}
-          color="#80FF00"
-        />
+        >
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button
-          title="Forgot Password"
+        <TouchableOpacity
+          style={styles.cancelButton}
           onPress={() => setForgotPasswordModalVisible(true)}
-          color="red"
-        />
+        >
+          <Text style={styles.buttonText}>Forgot Password</Text>
+        </TouchableOpacity>
       </View>
 
       <Modal
@@ -114,17 +121,19 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
                 value={resetEmail}
                 onChangeText={setResetEmail}
               />
-              <Button
-                title="Submit"
+              <TouchableOpacity
+                style={styles.button}
                 onPress={handlePasswordReset}
-                color="#80FF00"
-              />
+              >
+                <Text style={styles.buttonText}>Submit</Text>
+              </TouchableOpacity>
               <View style={styles.cancelButtonContainer}>
-                <Button
-                  title="Cancel"
+                <TouchableOpacity
+                  style={styles.cancelButton}
                   onPress={() => setForgotPasswordModalVisible(false)}
-                  color="#FF0000"
-                />
+                >
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </ScrollView>
@@ -166,17 +175,19 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
                 value={monthlyIncome}
                 onChangeText={setMonthlyIncome}
               />
-              <Button
-                title="Submit"
+              <TouchableOpacity
+                style={styles.button}
                 onPress={handleSignUpSubmit}
-                color="#80FF00"
-              />
+              >
+                <Text style={styles.buttonText}>Submit</Text>
+              </TouchableOpacity>
               <View style={styles.cancelButtonContainer}>
-                <Button
-                  title="Cancel"
+                <TouchableOpacity
+                  style={styles.cancelButton}
                   onPress={() => setSignUpModalVisible(false)}
-                  color="#FF0000"
-                />
+                >
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </ScrollView>
@@ -211,17 +222,19 @@ const UserProfileScreen: React.FC<UserProfileScreenProps> = ({
                 value={password}
                 onChangeText={setPassword}
               />
-              <Button
-                title="Submit"
+              <TouchableOpacity
+                style={styles.button}
                 onPress={handleLoginSubmit}
-                color="#80FF00"
-              />
+              >
+                <Text style={styles.buttonText}>Submit</Text>
+              </TouchableOpacity>
               <View style={styles.cancelButtonContainer}>
-                <Button
-                  title="Cancel"
+                <TouchableOpacity
+                  style={styles.cancelButton}
                   onPress={() => setLoginModalVisible(false)}
-                  color="#FF0000"
-                />
+                >
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </ScrollView>
@@ -236,7 +249,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#000F0C",
+    backgroundColor: "grey",
     padding: 10,
   },
   imageContainer: {
@@ -250,10 +263,16 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   title: {
-    fontSize: 20,
+    fontSize: 76,
     marginBottom: 20,
-    color: "#80FF00",
-    fontWeight: "bold",
+    color: "#00C293",
+    fontWeight: "600",
+  },
+  title2: {
+    fontSize: 76,
+    marginBottom: 20,
+    color: "white",
+    fontWeight: "600",
   },
   buttonContainer: {
     width: "90%",
@@ -271,31 +290,67 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalView: {
-    backgroundColor: "#000F0C",
+    backgroundColor: "grey",
     padding: 20,
     borderRadius: 10,
     width: "90%",
-    borderColor: "#80FF00",
-    borderWidth: 2,
+    borderColor: "#00C293",
+    borderWidth: 4,
   },
   modalTitle: {
     fontSize: 18,
     marginBottom: 15,
-    color: "#80FF00",
+    color: "#00C293",
     fontWeight: "bold",
   },
   input: {
     height: 40,
-    borderColor: "#80FF00",
-    borderWidth: 1,
+    borderColor: "white",
+    borderWidth: 3,
+    borderBottomRightRadius: 25,
     marginBottom: 12,
     paddingHorizontal: 10,
-    color: "#80FF00",
+    color: "white",
     width: "100%",
-    backgroundColor: "#000F0C",
+    backgroundColor: "grey",
+    fontSize: 16,
   },
   cancelButtonContainer: {
     marginTop: 10,
+  },
+  button: {
+    backgroundColor: "#00C293",
+    paddingVertical: 15,
+    borderRadius: 50,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 6,
+    width: width * 0.5,
+    alignSelf: "center",
+  },
+  cancelButton: {
+    backgroundColor: "#FF2A03",
+    paddingVertical: 15,
+    borderRadius: 50,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 6,
+    width: width * 0.5,
+    alignSelf: "center",
+  },
+  buttonText: {
+    fontSize: 21,
+    fontWeight: 600,
   },
 });
 
