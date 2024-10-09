@@ -94,7 +94,7 @@ const StockScreen = () => {
       <Text style={styles.title}>Stocks</Text>
       {stockData.map((stock, index) => (
         <View key={index} style={styles.card}>
-          <Text style={styles.stockTitle}>{stock.name}</Text>
+          <Text style={styles.stockTitle}>{stock.name} nnn</Text>
           <LineChart
             data={{
               labels: ["Open", "High", "Low", "Close"],
