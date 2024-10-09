@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import { LineChart } from "react-native-chart-kit";
 import axios from "axios";
@@ -94,7 +95,7 @@ const StockScreen = () => {
       <Text style={styles.title}>Stocks</Text>
       {stockData.map((stock, index) => (
         <View key={index} style={styles.card}>
-          <Text style={styles.stockTitle}>{stock.name}</Text>
+          <Text style={styles.stockTitle}>{stock.symbol}</Text>
           <LineChart
             data={{
               labels: ["Open", "High", "Low", "Close"],
@@ -103,20 +104,15 @@ const StockScreen = () => {
             width={300}
             height={200}
             chartConfig={{
-              backgroundColor: "#000F0C",
-              backgroundGradientFrom: "#000F0C",
-              backgroundGradientTo: "#000F0C",
+              backgroundColor: "grey",
+              backgroundGradientFrom: "grey",
+              backgroundGradientTo: "grey",
               color: () => "#80FF00",
               labelColor: () => "#80FF00",
               strokeWidth: 2,
             }}
           />
-          <Button
-            title={
-              favorites.includes(stock.symbol)
-                ? "Remove from Favorites"
-                : "Add to Favorites"
-            }
+          <TouchableOpacity
             onPress={() => {
               if (favorites.includes(stock.symbol)) {
                 removeFavorite(stock.symbol);
@@ -124,8 +120,14 @@ const StockScreen = () => {
                 addFavorite(stock.symbol);
               }
             }}
-            color="#80FF00"
-          />
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>
+              {favorites.includes(stock.symbol)
+                ? "Remove from Favorites"
+                : "Add to Favorites"}
+            </Text>
+          </TouchableOpacity>
         </View>
       ))}
       {/* Footer */}
@@ -173,7 +175,7 @@ const createStyles = (theme: string) => {
         },
         card: {
           padding: 20,
-          backgroundColor: "#000F0C",
+          backgroundColor: "grey",
           marginBottom: 20,
           borderRadius: 10,
           borderColor: "white",
@@ -184,13 +186,26 @@ const createStyles = (theme: string) => {
           color: "white",
           marginBottom: 10,
         },
+        button: {
+          marginTop: 20,
+          backgroundColor: "black",
+          paddingVertical: 15,
+          borderRadius: 50,
+          alignItems: "center",
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 3 },
+          shadowOpacity: 0.2,
+          shadowRadius: 5,
+          elevation: 6,
+        },
+        buttonText: { fontSize: 18, fontWeight: "600", color: "white" },
       })
     : StyleSheet.create({
         container: {
           flex: 1,
           padding: 20,
 
-          backgroundColor: "#000F0C",
+          backgroundColor: "grey",
         },
         title: {
           fontSize: 24,
@@ -219,17 +234,30 @@ const createStyles = (theme: string) => {
         },
         card: {
           padding: 20,
-          backgroundColor: "#000F0C",
+          backgroundColor: "black",
           marginBottom: 20,
           borderRadius: 10,
-          borderColor: "#80FF00",
-          borderWidth: 2,
+          borderColor: "#00C293",
+          borderWidth: 4,
         },
         stockTitle: {
           fontSize: 18,
           color: "#80FF00",
           marginBottom: 10,
         },
+        button: {
+          marginTop: 20,
+          backgroundColor: "white",
+          paddingVertical: 15,
+          borderRadius: 50,
+          alignItems: "center",
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 3 },
+          shadowOpacity: 0.2,
+          shadowRadius: 5,
+          elevation: 6,
+        },
+        buttonText: { fontSize: 18, fontWeight: "600", color: "black" },
       });
 };
 

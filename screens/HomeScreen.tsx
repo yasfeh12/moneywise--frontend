@@ -113,18 +113,29 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 Favorite Stocks ({favorites.length})
               </Text>
               <Ionicons
-                name={showFavorites ? 'chevron-up' : 'chevron-down'}
+                name={showFavorites ? "chevron-up" : "chevron-down"}
                 size={24}
-                color={theme === 'light' ? 'white' : '#9EADAD'}
+                color={theme === "light" ? "white" : "#9EADAD"}
               />
             </TouchableOpacity>
 
             {showFavorites && (
               <View style={styles.favoritesList}>
                 {favorites.map((stock, index) => (
-                  <Text key={index} style={styles.favoriteItem}>
-                    {stock}
-                  </Text>
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.favoriteButton}
+                    onPress={() => navigation.navigate("Stocks")}
+                  >
+                    <Text key={index} style={styles.favoriteItem}>
+                      {stock}{" "}
+                      <Ionicons
+                        name="trending-up-outline"
+                        size={30}
+                        color={theme === "light" ? "white" : "#9EADAD"}
+                      />
+                    </Text>
+                  </TouchableOpacity>
                 ))}
               </View>
             )}
@@ -151,8 +162,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <Text style={styles.buttonText}>Edit Budgets</Text>
       </TouchableOpacity>
 
-      {/* Footer */}
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
         <ToggleTheme />
       </View>
     </ScrollView>
@@ -253,26 +263,26 @@ const createStyles = (theme: string) => {
         favoritesContainer: {
           marginTop: 10,
           borderTopWidth: 1,
-          borderTopColor: 'rgba(255, 255, 255, 0.3)',
+          borderTopColor: "rgba(255, 255, 255, 0.3)",
           paddingTop: 10,
         },
         favoritesButton: {
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
           paddingVertical: 5,
         },
         favoritesButtonText: {
           fontSize: 18,
-          color: 'white',
-          fontWeight: '500',
+          color: "white",
+          fontWeight: "500",
         },
         favoritesList: {
           marginTop: 5,
         },
         favoriteItem: {
-          fontSize: 16,
-          color: 'white',
+          fontSize: 30,
+          color: "white",
           paddingVertical: 5,
         },
       })
@@ -372,26 +382,26 @@ const createStyles = (theme: string) => {
         favoritesContainer: {
           marginTop: 10,
           borderTopWidth: 1,
-          borderTopColor: 'rgba(158, 173, 173, 0.3)',
+          borderTopColor: "rgba(158, 173, 173, 0.3)",
           paddingTop: 10,
         },
         favoritesButton: {
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
           paddingVertical: 5,
         },
         favoritesButtonText: {
           fontSize: 18,
-          color: '#9EADAD',
-          fontWeight: '500',
+          color: "#9EADAD",
+          fontWeight: "500",
         },
         favoritesList: {
           marginTop: 5,
         },
         favoriteItem: {
-          fontSize: 16,
-          color: '#9EADAD',
+          fontSize: 30,
+          color: "#9EADAD",
           paddingVertical: 5,
         },
       });
