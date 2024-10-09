@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
-import axios from "axios";
+import React, { useEffect, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -8,13 +7,15 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-} from "react-native";
-import { ProgressBar } from "react-native-paper";
-import { StackNavigationProp } from "@react-navigation/stack";
-import ToggleTheme from "../components/ToggleTheme";
-import { ThemeContext } from "../utils/ThemeContext";
-import { useFavorites } from "./FavoritesContext";
-import { Ionicons } from "@expo/vector-icons";
+} from 'react-native';
+import { ProgressBar } from 'react-native-paper';
+import { StackNavigationProp } from '@react-navigation/stack';
+import ToggleTheme from '../components/ToggleTheme';
+import { ThemeContext } from '../utils/ThemeContext';
+import { useFavorites } from './FavoritesContext';
+import { Ionicons } from '@expo/vector-icons';
+import apiClient from '../utils/API';
+import { AuthContext } from '../App';
 
 interface OverviewData {
   overview: {
@@ -35,18 +36,19 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const { theme, setTheme } = useContext(ThemeContext);
   const { favorites } = useFavorites();
   const [showFavorites, setShowFavorites] = useState(false);
+  const { user } = useContext(AuthContext);
 
   const styles = createStyles(theme);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:9090/api/overview")
+    apiClient
+      .get('http://localhost:9090/api/overview')
       .then((response) => {
         setOverviewData(response.data);
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching overview data:", error);
+        console.error('Error fetching overview data:', error);
         setLoading(false);
       });
   }, []);
@@ -67,7 +69,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     );
   }
 
-  console.log(overviewData.overview, "herer line 59");
+  // console.log(overviewData.overview, 'herer line 59');
 
   const {
     income,
@@ -86,11 +88,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       <View style={styles.profileSection}>
         <Image
           source={{
-            uri: "https://aui.atlassian.com/aui/8.8/docs/images/avatar-person.svg",
+            uri: 'https://aui.atlassian.com/aui/8.8/docs/images/avatar-person.svg',
           }}
           style={styles.avatar}
         />
-        <Text style={styles.welcome}>Hello, Yaseen!</Text>
+        <Text style={styles.welcome}>Hello, {user?.username}!</Text>
       </View>
 
       <Text style={styles.title}>Account Overview</Text>
@@ -120,7 +122,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             {showFavorites && (
               <View style={styles.favoritesList}>
                 {favorites.map((stock, index) => (
-                  <Text key={index} style={styles.favoriteItem}>{stock}</Text>
+                  <Text key={index} style={styles.favoriteItem}>
+                    {stock}
+                  </Text>
                 ))}
               </View>
             )}
@@ -132,7 +136,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       <View style={{ marginBottom: 35 }}>
         <ProgressBar
           progress={progress}
-          color={theme === "light" ? "grey" : "#00C293"}
+          color={theme === 'light' ? 'grey' : '#00C293'}
           style={styles.progressBar}
         />
       </View>
@@ -142,13 +146,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("Budgets")}
+        onPress={() => navigation.navigate('Budgets')}
       >
         <Text style={styles.buttonText}>Edit Budgets</Text>
       </TouchableOpacity>
 
       {/* Footer */}
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         <ToggleTheme />
       </View>
     </ScrollView>
@@ -156,16 +160,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 };
 
 const createStyles = (theme: string) => {
-  return theme === "light"
+  return theme === 'light'
     ? StyleSheet.create({
         container: {
           flex: 1,
           padding: 20,
-          backgroundColor: "#00C293",
+          backgroundColor: '#00C293',
         },
         profileSection: {
-          flexDirection: "row",
-          alignItems: "center",
+          flexDirection: 'row',
+          alignItems: 'center',
           marginBottom: 20,
         },
         avatar: {
@@ -176,42 +180,42 @@ const createStyles = (theme: string) => {
         },
         welcome: {
           fontSize: 20,
-          fontWeight: "bold",
-          color: "white",
+          fontWeight: 'bold',
+          color: 'white',
         },
         title: {
           fontSize: 24,
-          fontWeight: "bold",
+          fontWeight: 'bold',
           marginBottom: 10,
 
-          color: "white",
+          color: 'white',
         },
         card: {
           padding: 15,
           borderRadius: 10,
           marginBottom: 20,
-          shadowColor: "#000",
+          shadowColor: '#000',
           shadowOpacity: 0.3,
           shadowRadius: 5,
           elevation: 5,
           borderWidth: 4,
 
-          borderColor: "#fff",
-          backgroundColor: "#636363",
+          borderColor: '#fff',
+          backgroundColor: '#636363',
         },
         info: {
           fontSize: 26,
           marginBottom: 5,
-          color: "white",
+          color: 'white',
           fontWeight: 400,
           padding: 14,
         },
         progressTitle: {
           fontSize: 16,
-          fontWeight: "bold",
+          fontWeight: 'bold',
           marginBottom: 10,
 
-          color: "white",
+          color: 'white',
         },
         progressBar: {
           height: 20,
@@ -220,21 +224,21 @@ const createStyles = (theme: string) => {
         },
         loadingContainer: {
           flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
         },
         errorContainer: {
           flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
         },
         button: {
           marginTop: 20,
-          backgroundColor: "white",
+          backgroundColor: 'white',
           paddingVertical: 15,
           borderRadius: 50,
-          alignItems: "center",
-          shadowColor: "#000",
+          alignItems: 'center',
+          shadowColor: '#000',
           shadowOffset: { width: 0, height: 3 },
           shadowOpacity: 0.2,
           shadowRadius: 5,
@@ -242,10 +246,10 @@ const createStyles = (theme: string) => {
         },
         buttonText: {
           fontSize: 18,
-          fontWeight: "600",
-          color: "#00C293",
+          fontWeight: '600',
+          color: '#00C293',
         },
-        progressText: { color: "white", fontSize: 18, fontWeight: 700 },
+        progressText: { color: 'white', fontSize: 18, fontWeight: 700 },
         favoritesContainer: {
           marginTop: 10,
           borderTopWidth: 1,
@@ -277,11 +281,11 @@ const createStyles = (theme: string) => {
           flex: 1,
           padding: 20,
 
-          backgroundColor: "grey",
+          backgroundColor: 'grey',
         },
         profileSection: {
-          flexDirection: "row",
-          alignItems: "center",
+          flexDirection: 'row',
+          alignItems: 'center',
           marginBottom: 20,
         },
         avatar: {
@@ -292,43 +296,43 @@ const createStyles = (theme: string) => {
         },
         welcome: {
           fontSize: 20,
-          fontWeight: "bold",
+          fontWeight: 'bold',
 
-          color: "black",
+          color: 'black',
         },
         title: {
           fontSize: 24,
-          fontWeight: "bold",
+          fontWeight: 'bold',
           marginBottom: 10,
 
-          color: "black",
+          color: 'black',
         },
         card: {
           padding: 15,
           borderRadius: 10,
           marginBottom: 20,
-          shadowColor: "#000",
+          shadowColor: '#000',
           shadowOpacity: 0.3,
           shadowRadius: 5,
           elevation: 5,
           borderWidth: 4,
 
-          borderColor: "#00C293",
-          backgroundColor: "black",
+          borderColor: '#00C293',
+          backgroundColor: 'black',
         },
         info: {
           fontSize: 26,
           marginBottom: 5,
-          color: "#9EADAD",
+          color: '#9EADAD',
           fontWeight: 400,
           padding: 14,
         },
         progressTitle: {
           fontSize: 16,
-          fontWeight: "bold",
+          fontWeight: 'bold',
           marginBottom: 10,
 
-          color: "black",
+          color: 'black',
         },
         progressBar: {
           height: 20,
@@ -338,22 +342,22 @@ const createStyles = (theme: string) => {
 
         loadingContainer: {
           flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
         },
 
         errorContainer: {
           flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
         },
         button: {
           marginTop: 20,
-          backgroundColor: "black",
+          backgroundColor: 'black',
           paddingVertical: 15,
           borderRadius: 50,
-          alignItems: "center",
-          shadowColor: "#000",
+          alignItems: 'center',
+          shadowColor: '#000',
           shadowOffset: { width: 0, height: 3 },
           shadowOpacity: 0.2,
           shadowRadius: 5,
@@ -361,10 +365,10 @@ const createStyles = (theme: string) => {
         },
         buttonText: {
           fontSize: 18,
-          fontWeight: "600",
-          color: "#9EADAD",
+          fontWeight: '600',
+          color: '#9EADAD',
         },
-        progressText: { color: "black", fontSize: 18, fontWeight: 700 },
+        progressText: { color: 'black', fontSize: 18, fontWeight: 700 },
         favoritesContainer: {
           marginTop: 10,
           borderTopWidth: 1,
