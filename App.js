@@ -11,6 +11,7 @@ import StockScreen from "./screens/StockScreen";
 import UserProfileScreen from "./screens/UserProfileScreen";
 import { Ionicons } from "react-native-vector-icons";
 import { ThemeProvider } from "./utils/ThemeContext";
+import{FavoritesProvider} from "./screens/FavoritesContext";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -112,6 +113,7 @@ function MainTabs({ navigation }) {
 export default function App() {
   return (
     <ThemeProvider>
+      <FavoritesProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Login">
           <Stack.Screen name="Moneywise" component={UserProfileScreen} />
@@ -124,6 +126,7 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
+      </FavoritesProvider>
     </ThemeProvider>
   );
 }

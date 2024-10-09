@@ -192,6 +192,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
+                marginTop: 20,
               }}
             >
               <View
@@ -246,6 +247,7 @@ const ReportScreen: React.FC = (): JSX.Element => {
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
+                marginTop: 20,
               }}
             >
               <View
@@ -383,7 +385,7 @@ const createStyles = (theme: string) => {
           marginBottom: 40,
           marginHorizontal: 10,
           overflow: "hidden",
-          borderWidth: 2,
+          borderWidth: 4,
           borderRadius: 15,
           padding: 10,
           paddingBottom: 50,
@@ -410,6 +412,8 @@ const createStyles = (theme: string) => {
           color: "white",
           marginLeft: 10,
           marginRight: 10,
+          paddingLeft: 5,
+          paddingRight: 5,
         },
       })
     : StyleSheet.create({
@@ -417,7 +421,7 @@ const createStyles = (theme: string) => {
           paddingVertical: 20,
           paddingHorizontal: 10,
 
-          backgroundColor: "#000F0C",
+          backgroundColor: "grey",
           color: "#FFFFFF",
         },
 
@@ -426,20 +430,20 @@ const createStyles = (theme: string) => {
           justifyContent: "center",
           alignItems: "center",
 
-          backgroundColor: "#000F0C",
+          backgroundColor: "grey",
         },
         title: {
           fontSize: 24,
           fontWeight: "bold",
           marginBottom: 20,
 
-          color: "white",
+          color: "black",
         },
         chartContainer: {
           marginBottom: 40,
           marginHorizontal: 10,
           overflow: "hidden",
-          borderWidth: 2,
+          borderWidth: 4,
           borderRadius: 15,
           padding: 10,
           paddingBottom: 50,
@@ -448,7 +452,8 @@ const createStyles = (theme: string) => {
           justifyContent: "center",
           alignItems: "center",
 
-          borderColor: "white",
+          borderColor: "#00C293",
+          backgroundColor: "#000",
         },
         chartTitle: {
           fontSize: 20,
@@ -465,6 +470,8 @@ const createStyles = (theme: string) => {
           color: "white",
           marginLeft: 10,
           marginRight: 10,
+          paddingLeft: 5,
+          paddingRight: 5,
         },
       });
 };

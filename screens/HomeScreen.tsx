@@ -13,6 +13,8 @@ import { ProgressBar } from "react-native-paper";
 import { StackNavigationProp } from "@react-navigation/stack";
 import ToggleTheme from "../components/ToggleTheme";
 import { ThemeContext } from "../utils/ThemeContext";
+import { useFavorites } from "./FavoritesContext";
+import { Ionicons } from "@expo/vector-icons";
 
 interface OverviewData {
   overview: {
@@ -31,6 +33,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [overviewData, setOverviewData] = useState<OverviewData | null>(null);
   const [loading, setLoading] = useState(true);
   const { theme, setTheme } = useContext(ThemeContext);
+  const { favorites } = useFavorites();
+  const [showFavorites, setShowFavorites] = useState(false);
 
   const styles = createStyles(theme);
 
@@ -97,6 +101,31 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <Text style={styles.info}>
           Remaining Balance: £{remainingBalance ?? 0}
         </Text>
+        {favorites.length > 0 && (
+          <View style={styles.favoritesContainer}>
+            <TouchableOpacity
+              style={styles.favoritesButton}
+              onPress={() => setShowFavorites(!showFavorites)}
+            >
+              <Text style={styles.favoritesButtonText}>
+                Favorite Stocks ({favorites.length})
+              </Text>
+              <Ionicons
+                name={showFavorites ? 'chevron-up' : 'chevron-down'}
+                size={24}
+                color={theme === 'light' ? 'white' : '#9EADAD'}
+              />
+            </TouchableOpacity>
+
+            {showFavorites && (
+              <View style={styles.favoritesList}>
+                {favorites.map((stock, index) => (
+                  <Text key={index} style={styles.favoriteItem}>{stock}</Text>
+                ))}
+              </View>
+            )}
+          </View>
+        )}
       </View>
 
       <Text style={styles.progressTitle}>Savings Goal Progress</Text>
@@ -217,6 +246,31 @@ const createStyles = (theme: string) => {
           color: "#00C293",
         },
         progressText: { color: "white", fontSize: 18, fontWeight: 700 },
+        favoritesContainer: {
+          marginTop: 10,
+          borderTopWidth: 1,
+          borderTopColor: 'rgba(255, 255, 255, 0.3)',
+          paddingTop: 10,
+        },
+        favoritesButton: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingVertical: 5,
+        },
+        favoritesButtonText: {
+          fontSize: 18,
+          color: 'white',
+          fontWeight: '500',
+        },
+        favoritesList: {
+          marginTop: 5,
+        },
+        favoriteItem: {
+          fontSize: 16,
+          color: 'white',
+          paddingVertical: 5,
+        },
       })
     : StyleSheet.create({
         container: {
@@ -311,6 +365,31 @@ const createStyles = (theme: string) => {
           color: "#9EADAD",
         },
         progressText: { color: "black", fontSize: 18, fontWeight: 700 },
+        favoritesContainer: {
+          marginTop: 10,
+          borderTopWidth: 1,
+          borderTopColor: 'rgba(158, 173, 173, 0.3)',
+          paddingTop: 10,
+        },
+        favoritesButton: {
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingVertical: 5,
+        },
+        favoritesButtonText: {
+          fontSize: 18,
+          color: '#9EADAD',
+          fontWeight: '500',
+        },
+        favoritesList: {
+          marginTop: 5,
+        },
+        favoriteItem: {
+          fontSize: 16,
+          color: '#9EADAD',
+          paddingVertical: 5,
+        },
       });
 };
 export default HomeScreen;
