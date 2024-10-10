@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   View,
   Text,
@@ -40,18 +41,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   const styles = createStyles(theme);
 
-  useEffect(() => {
-    apiClient
-      .get('http://localhost:9090/api/overview')
-      .then((response) => {
-        setOverviewData(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching overview data:', error);
-        setLoading(false);
-      });
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      apiClient
+        .get('http://localhost:9090/api/overview')
+        .then((response) => {
+          setOverviewData(response.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error('Error fetching overview data:', error);
+          setLoading(false);
+        });
+    }, [])
+  );
 
   if (loading) {
     return (
@@ -113,9 +116,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 Favorite Stocks ({favorites.length})
               </Text>
               <Ionicons
-                name={showFavorites ? "chevron-up" : "chevron-down"}
+                name={showFavorites ? 'chevron-up' : 'chevron-down'}
                 size={24}
-                color={theme === "light" ? "white" : "#9EADAD"}
+                color={theme === 'light' ? 'white' : '#9EADAD'}
               />
             </TouchableOpacity>
 
@@ -125,14 +128,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   <TouchableOpacity
                     key={index}
                     style={styles.favoriteButton}
-                    onPress={() => navigation.navigate("Stocks")}
+                    onPress={() => navigation.navigate('Stocks')}
                   >
                     <Text key={index} style={styles.favoriteItem}>
-                      {stock}{" "}
+                      {stock}{' '}
                       <Ionicons
                         name="trending-up-outline"
                         size={30}
-                        color={theme === "light" ? "white" : "#9EADAD"}
+                        color={theme === 'light' ? 'white' : '#9EADAD'}
                       />
                     </Text>
                   </TouchableOpacity>
@@ -162,7 +165,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <Text style={styles.buttonText}>Edit Budgets</Text>
       </TouchableOpacity>
 
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
+      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
         <ToggleTheme />
       </View>
     </ScrollView>
@@ -263,26 +266,26 @@ const createStyles = (theme: string) => {
         favoritesContainer: {
           marginTop: 10,
           borderTopWidth: 1,
-          borderTopColor: "rgba(255, 255, 255, 0.3)",
+          borderTopColor: 'rgba(255, 255, 255, 0.3)',
           paddingTop: 10,
         },
         favoritesButton: {
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           paddingVertical: 5,
         },
         favoritesButtonText: {
           fontSize: 18,
-          color: "white",
-          fontWeight: "500",
+          color: 'white',
+          fontWeight: '500',
         },
         favoritesList: {
           marginTop: 5,
         },
         favoriteItem: {
           fontSize: 30,
-          color: "white",
+          color: 'white',
           paddingVertical: 5,
         },
       })
@@ -382,26 +385,26 @@ const createStyles = (theme: string) => {
         favoritesContainer: {
           marginTop: 10,
           borderTopWidth: 1,
-          borderTopColor: "rgba(158, 173, 173, 0.3)",
+          borderTopColor: 'rgba(158, 173, 173, 0.3)',
           paddingTop: 10,
         },
         favoritesButton: {
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
           paddingVertical: 5,
         },
         favoritesButtonText: {
           fontSize: 18,
-          color: "#9EADAD",
-          fontWeight: "500",
+          color: '#9EADAD',
+          fontWeight: '500',
         },
         favoritesList: {
           marginTop: 5,
         },
         favoriteItem: {
           fontSize: 30,
-          color: "#9EADAD",
+          color: '#9EADAD',
           paddingVertical: 5,
         },
       });
