@@ -134,7 +134,6 @@ export default function App() {
           };
         case 'SIGN_IN':
           const tokenInfo2 = jwtDecode(action.token);
-          console.log(tokenInfo2);
           return {
             ...prevState,
             isSignout: false,
@@ -195,69 +194,71 @@ export default function App() {
     bootstrapAsync();
   }, []);
 
+  let interceptor;
+  const setEjectRequestInterceptor = (token) => {
+    if (token) {
+      interceptor = apiClient.interceptors.request.use((config) => {
+        config.headers.Authorization = `Bearer ${token}`;
+        return config;
+      });
+    } else {
+      apiClient.interceptors.request.eject(interceptor);
+    }
+  };
+
   const authContext = React.useMemo(
     () => ({
       signIn: async ({ username, password }) => {
         // In a production app, we need to send some data (usually username, password) to server and get a token
-        apiClient
-          .post('/users/auth', {
-            username,
-            password,
-          })
-          .then((response) => {
-            try {
-              // await SecureStore.setItemAsync(
-              //   'userToken',
-              //   response.data.user.access_token
-              // );
-              localStorage.setItem(
-                `${
-                  jwtDecode(response.data.user.access_token).userId
-                }_userToken`,
-                response.data.user.access_token
-              );
-            } catch (e) {
-              console.log(e);
-            }
+        const response = await apiClient.post('/users/auth/login', {
+          username,
+          password,
+        });
 
-            apiClient.interceptors.request.use((config) => {
-              config.headers.Authorization = `Bearer ${response.data.user.access_token}`;
-              return config;
-            });
+        try {
+          // BELOW CODE IS FOR MOBILE
+          // await SecureStore.setItemAsync(
+          //   'userToken',
+          //   response.data.user.access_token
+          // );
+          // BELOW CODE IS FOR WEB BROWSERS
+          localStorage.setItem(
+            `${jwtDecode(response.data.user.access_token).userId}_userToken`,
+            response.data.user.access_token
+          );
+        } catch (e) {
+          console.log(e);
+        }
 
-            dispatch({
-              type: 'SIGN_IN',
-              token: response.data.user.access_token,
-            });
-          });
-        // We will also need to handle errors if sign in failed
-        // After getting token, we need to persist the token using `SecureStore`
+        setEjectRequestInterceptor(response.data.user.access_token);
+
+        dispatch({
+          type: 'SIGN_IN',
+          token: response.data.user.access_token,
+        });
       },
-      signOut: () => {
+      signOut: async () => {
         const storageKey = Object.keys(localStorage).find((key) =>
           key.includes('userToken')
         );
         localStorage.removeItem(storageKey);
-        apiClient.interceptors.request.use((config) => {
-          config.headers.Authorization = '';
-          return config;
-        });
+        setEjectRequestInterceptor();
+        const response = await apiClient.post('/users/auth/logout', {});
         dispatch({ type: 'SIGN_OUT' });
       },
       signUp: async ({ username, password }) => {
-        // In a production app, we need to send user data to server and get a token
         const response = await apiClient.post('/users', {
           username,
           password,
         });
         // We will also need to handle errors if sign up failed
         // After getting token, we need to persist the token using `SecureStore`
-        // In the example, we'll use a dummy token
+        localStorage.setItem(
+          `${jwtDecode(response.data.user.access_token).userId}_userToken`,
+          response.data.user.access_token
+        );
 
-        apiClient.interceptors.request.use((config) => {
-          config.headers.Authorization = `Bearer ${response.data.user.access_token}`;
-          return config;
-        });
+        setEjectRequestInterceptor(response.data.user.access_token);
 
         dispatch({ type: 'SIGN_IN', token: response.data.user.access_token });
       },
