@@ -1,5 +1,4 @@
-import React, { useState, useContext } from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import React, { useState, useContext, useEffect } from 'react';
 import {
   View,
   Text,
@@ -41,20 +40,18 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   const styles = createStyles(theme);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      apiClient
-        .get('http://localhost:9090/api/overview')
-        .then((response) => {
-          setOverviewData(response.data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error('Error fetching overview data:', error);
-          setLoading(false);
-        });
-    }, [])
-  );
+  useEffect(() => {
+    apiClient
+      .get('http://localhost:9090/api/overview')
+      .then((response) => {
+        setOverviewData(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching overview data:', error);
+        setLoading(false);
+      });
+  }, []);
 
   if (loading) {
     return (
