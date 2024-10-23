@@ -18,7 +18,10 @@
 
 ### Live Demo:
 
-[Deployed Version of Moneywise ](link)
+[Deployed Version of Moneywise ](link) or
+please visit this link for a live youtube demo: 
+Here is the link :
+https://youtu.be/94Ba0-iJGak
 
 ## General Information:
 
